@@ -32,6 +32,15 @@ const BADGES = [
   { src: "https://cyber.dabamos.de/88x31/fire.gif", alt: "Fire" },
 ];
 
+const RETRO_GIFS = {
+  fireBar: "https://web.archive.org/web/20091025162704if_/http://geocities.com/curt_sigurdsen/firebar.gif",
+  rainbowBar: "https://web.archive.org/web/20090830010722if_/http://www.geocities.com/heartland/8033/rainbar.gif",
+  star: "https://web.archive.org/web/20091026164357if_/http://geocities.com/lovelessrascal2002/star.gif",
+  welcome: "https://web.archive.org/web/20090831180426if_/http://www.geocities.com/mohemed_taha/welcome.gif",
+  divider: "https://web.archive.org/web/20090727071006if_/http://www.geocities.com/cam_champlain/divider.gif",
+  newGif: "https://web.archive.org/web/20060306153144if_/http://www.geocities.com:80/aorlyrics/new.gif",
+};
+
 const VISITOR_NUMBER = "00048731";
 
 export default function Home() {
@@ -109,15 +118,43 @@ export default function Home() {
         <div className="gif-divider">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="https://web.archive.org/web/2009/http://www.geocities.com/SoHo/7373/bar.gif"
+            src={RETRO_GIFS.fireBar}
             alt="decorative fire bar"
             style={{ height: "16px" }}
             onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
           />
         </div>
 
-        <h1 className="wordart">{"✧ DitherY2K ✧"}</h1>
-        <br />
+        {/* Welcome GIF */}
+        <div style={{ marginBottom: "6px" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={RETRO_GIFS.welcome}
+            alt="Welcome!"
+            style={{ height: "30px", imageRendering: "pixelated" }}
+            onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+          />
+        </div>
+
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "8px" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={RETRO_GIFS.star}
+            alt="star"
+            className="sparkle"
+            style={{ height: "24px", imageRendering: "pixelated" }}
+            onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+          />
+          <h1 className="wordart">{"✧ DitherY2K ✧"}</h1>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={RETRO_GIFS.star}
+            alt="star"
+            className="sparkle"
+            style={{ height: "24px", imageRendering: "pixelated" }}
+            onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+          />
+        </div>
         <span className="wordart-subtitle">
           {'"The Ultimate Retro Image Ditherer!!!"'}
         </span>
@@ -147,7 +184,7 @@ export default function Home() {
         <div className="gif-divider" style={{ marginTop: "8px" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="https://web.archive.org/web/2009/http://www.geocities.com/SoHo/7373/bar.gif"
+            src={RETRO_GIFS.fireBar}
             alt="decorative fire bar"
             style={{ height: "16px" }}
             onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
@@ -155,7 +192,16 @@ export default function Home() {
         </div>
       </div>
 
-      <hr className="rainbow-hr" />
+      {/* Rainbow divider GIF */}
+      <div className="gif-divider" style={{ margin: "4px 0" }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={RETRO_GIFS.rainbowBar}
+          alt="rainbow divider"
+          style={{ width: "100%", height: "8px", imageRendering: "pixelated" }}
+          onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+        />
+      </div>
 
       {/* ===== TABLE LAYOUT: SIDEBAR + MAIN ===== */}
       <div className="geo-table" style={{ padding: "0 8px" }}>
@@ -351,7 +397,16 @@ export default function Home() {
         </div>
       </div>
 
-      <hr className="rainbow-hr" />
+      {/* Rainbow divider GIF before footer */}
+      <div className="gif-divider" style={{ margin: "4px 0" }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={RETRO_GIFS.rainbowBar}
+          alt="rainbow divider"
+          style={{ width: "100%", height: "8px", imageRendering: "pixelated" }}
+          onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+        />
+      </div>
 
       {/* ===== FOOTER ===== */}
       <div className="geo-footer">
@@ -359,7 +414,7 @@ export default function Home() {
         <div className="gif-divider" style={{ marginBottom: "12px" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="https://web.archive.org/web/2009/http://www.geocities.com/SoHo/7373/bar.gif"
+            src={RETRO_GIFS.fireBar}
             alt="decorative bar"
             style={{ height: "12px" }}
             onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
@@ -428,13 +483,13 @@ export default function Home() {
           ))}
         </div>
 
-        {/* Divider GIF */}
+        {/* Decorative divider GIF */}
         <div className="gif-divider" style={{ marginBottom: "8px" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="https://web.archive.org/web/2009/http://www.geocities.com/SoHo/7373/bar.gif"
-            alt="decorative bar"
-            style={{ height: "12px" }}
+            src={RETRO_GIFS.divider}
+            alt="decorative divider"
+            style={{ maxWidth: "400px", imageRendering: "pixelated" }}
             onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
           />
         </div>
