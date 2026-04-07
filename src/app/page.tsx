@@ -22,20 +22,20 @@ const DEFAULT_CONTROLS: ControlValues = {
 };
 
 const BADGES = [
-  { src: "/gifs/badge-netscape.png", alt: "Netscape Now" },
-  { src: "/gifs/badge-html.png", alt: "HTML" },
-  { src: "/gifs/badge-js.png", alt: "JavaScript" },
-  { src: "/gifs/badge-css.png", alt: "CSS" },
-  { src: "/gifs/badge-fire.png", alt: "Fire!" },
-  { src: "/gifs/badge-www.png", alt: "WWW" },
-  { src: "/gifs/badge-y2k.png", alt: "Y2K" },
-  { src: "/gifs/badge-notepad.png", alt: "Notepad" },
+  { src: "https://cyber.dabamos.de/88x31/netscape.gif", alt: "Netscape Now" },
+  { src: "https://cyber.dabamos.de/88x31/ie_logo.gif", alt: "Internet Explorer" },
+  { src: "https://cyber.dabamos.de/88x31/html.gif", alt: "HTML" },
+  { src: "https://cyber.dabamos.de/88x31/notepad.gif", alt: "Made with Notepad" },
+  { src: "https://cyber.dabamos.de/88x31/www.gif", alt: "World Wide Web" },
+  { src: "https://cyber.dabamos.de/88x31/javascript.gif", alt: "JavaScript" },
+  { src: "https://cyber.dabamos.de/88x31/css.gif", alt: "CSS" },
+  { src: "https://cyber.dabamos.de/88x31/fire.gif", alt: "Fire" },
 ];
 
 const AWARDS = [
-  { src: "/gifs/award-best.png", alt: "Best of Web 2003" },
-  { src: "/gifs/award-top.png", alt: "Top 100 Sites" },
-  { src: "/gifs/award-choice.png", alt: "Webmaster's Choice" },
+  { src: "https://cyber.dabamos.de/88x31/bestview.gif", alt: "Best Viewed With Eyes" },
+  { src: "https://cyber.dabamos.de/88x31/nocopyright.gif", alt: "No Copyright" },
+  { src: "https://cyber.dabamos.de/88x31/built.gif", alt: "Built to Last" },
 ];
 
 const VISITOR_NUMBER = "00048731";
