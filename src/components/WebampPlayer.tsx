@@ -25,7 +25,7 @@ export default function WebampPlayer() {
           },
         ],
         initialSkin: {
-          url: "https://cdn.webampskins.org/skins/cb7102ec7a4f6cefbc63d0dc0aecea16.wsz",
+          url: "https://archive.org/cors/winampskin_Purple_Glow/Purple_Glow.wsz",
         },
         zIndex: 100,
       });
