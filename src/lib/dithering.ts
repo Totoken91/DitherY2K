@@ -67,10 +67,11 @@ export function generatePalette(count: number): RGB[] {
   const stepsPerChannel = Math.max(2, Math.ceil(Math.pow(count, 1 / 3)));
   const palette: RGB[] = [];
 
+  outer:
   for (let r = 0; r < stepsPerChannel; r++) {
     for (let g = 0; g < stepsPerChannel; g++) {
       for (let b = 0; b < stepsPerChannel; b++) {
-        if (palette.length >= count) break;
+        if (palette.length >= count) break outer;
         palette.push([
           Math.round((r * 255) / (stepsPerChannel - 1)),
           Math.round((g * 255) / (stepsPerChannel - 1)),
@@ -80,8 +81,7 @@ export function generatePalette(count: number): RGB[] {
     }
   }
 
-  // Trim to exact count
-  return palette.slice(0, count);
+  return palette;
 }
 
 // ----- Brightness / Contrast adjustment -----

@@ -77,12 +77,21 @@ export default function Home() {
     []
   );
 
+  const prevImageRef = useRef<HTMLImageElement | null>(null);
+
   useEffect(() => {
     if (!image) return;
     if (debounceRef.current) clearTimeout(debounceRef.current);
+
+    // First load: process immediately. Control changes: debounce 200ms.
+    const isNewImage = prevImageRef.current !== image;
+    prevImageRef.current = image;
+    const delay = isNewImage ? 0 : 200;
+
     debounceRef.current = setTimeout(() => {
       runProcessing(image, controls);
-    }, 200);
+    }, delay);
+
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
@@ -90,11 +99,15 @@ export default function Home() {
 
   const handleImageLoaded = useCallback(
     async (file: File) => {
-      const img = await loadImageFromFile(file);
-      setImage(img);
-      runProcessing(img, controls);
+      try {
+        const img = await loadImageFromFile(file);
+        setImage(img);
+        // The useEffect will trigger processing via the debounce
+      } catch {
+        alert("Failed to load image. Please try a different file.");
+      }
     },
-    [controls, runProcessing]
+    []
   );
 
   const handleDownload = useCallback(() => {

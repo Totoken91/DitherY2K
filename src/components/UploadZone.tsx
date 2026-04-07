@@ -41,6 +41,8 @@ export default function UploadZone({ onImageLoaded }: UploadZoneProps) {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (file) handleFile(file);
+      // Reset so re-uploading the same file triggers onChange again
+      e.target.value = "";
     },
     [handleFile]
   );
