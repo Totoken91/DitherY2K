@@ -1,8 +1,13 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";
+import dynamic from "next/dynamic";
 import UploadZone from "@/components/UploadZone";
 import Controls, { type ControlValues } from "@/components/Controls";
+
+const WebampPlayer = dynamic(() => import("@/components/WebampPlayer"), {
+  ssr: false,
+});
 import Preview from "@/components/Preview";
 import {
   loadImageFromFile,
@@ -281,6 +286,12 @@ export default function Home() {
             <button className="btn-retro tilt-left" onClick={() => alert("Thanks for signing! 📝")} style={{ fontSize: "11px" }}>
               {"📖 Sign Guestbook!"}
             </button>
+          </div>
+
+          {/* Webamp */}
+          <div className="sidebar-section" style={{ padding: "4px", overflow: "hidden" }}>
+            <div className="sidebar-title">{"♪ Now Playing ♪"}</div>
+            <WebampPlayer />
           </div>
 
           {/* Email */}
