@@ -121,6 +121,16 @@ export function processImage(
   // Write back
   ctx.putImageData(imageData, 0, 0);
 
+  // Step 3.5: Date stamp (digicam only, before upscale for pixelated look)
+  if (options.algorithm === "digicam" && options.digicamDateStamp) {
+    const fontSize = Math.max(8, Math.floor(resized.height * 0.04));
+    ctx.font = `${fontSize}px "Courier New", monospace`;
+    ctx.fillStyle = "rgba(255, 136, 0, 0.7)";
+    ctx.textAlign = "right";
+    ctx.textBaseline = "bottom";
+    ctx.fillText("2003/04/07", resized.width - 4, resized.height - 4);
+  }
+
   // Step 4: Upscale
   const final = upscaleNearestNeighbor(resized, options.upscaleFactor);
 

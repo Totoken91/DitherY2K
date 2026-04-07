@@ -19,6 +19,14 @@ const DEFAULT_CONTROLS: ControlValues = {
   resolution: "vga",
   upscaleEnabled: false,
   upscaleFactor: 2,
+  // Digicam defaults
+  digicamNoise: 40,
+  digicamJpegQuality: 60,
+  digicamBloom: 20,
+  digicamColorCast: "warm",
+  digicamVignette: true,
+  digicamChromatic: true,
+  digicamDateStamp: true,
 };
 
 const BADGES = [
