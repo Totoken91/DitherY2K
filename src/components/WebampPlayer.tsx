@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function WebampPlayer() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const initedRef = useRef(false);
   const webampRef = useRef<unknown>(null);
+  const initedRef = useRef(false);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (initedRef.current || !containerRef.current) return;
+    if (!visible || initedRef.current || !containerRef.current) return;
     initedRef.current = true;
 
     const initWebamp = async () => {
@@ -19,9 +20,11 @@ export default function WebampPlayer() {
       const webamp = new Webamp({
         initialTracks: [
           {
-            metaData: { artist: "DJ Mike Llama", title: "Llama Whippin' Intro" },
-            url: "https://cdn.jsdelivr.net/gh/captbaritone/webamp@43434d82cfe0e37286dbbe0666072dc3190a83bc/mp3/llama-2.91.mp3",
-            duration: 5.322286,
+            metaData: {
+              artist: "Claas Herrmann",
+              title: "Raskolnikow (Original Mix)",
+            },
+            url: "/music.mp3",
           },
         ],
         initialSkin: {
@@ -32,16 +35,42 @@ export default function WebampPlayer() {
 
       await webamp.renderWhenReady(containerRef.current!);
       webampRef.current = webamp;
+
+      // Auto-play
+      webamp.play();
+
+      // If user closes Webamp via its own close button, hide our toggle
+      webamp.onClose(() => {
+        setVisible(false);
+        initedRef.current = false;
+      });
     };
 
     initWebamp();
+  }, [visible]);
 
-    return () => {
-      if (webampRef.current) {
-        (webampRef.current as { dispose: () => void }).dispose();
-      }
-    };
-  }, []);
+  return (
+    <>
+      {/* Toggle button — always visible */}
+      {!visible && (
+        <button
+          className="btn-retro"
+          onClick={() => setVisible(true)}
+          style={{
+            position: "fixed",
+            bottom: "10px",
+            left: "10px",
+            zIndex: 999,
+            fontSize: "12px",
+            padding: "4px 10px",
+          }}
+        >
+          {"🎵 Open Winamp"}
+        </button>
+      )}
 
-  return <div ref={containerRef} id="webamp-container" />;
+      {/* Webamp container — only mounted when visible */}
+      {visible && <div ref={containerRef} id="webamp-container" />}
+    </>
+  );
 }
