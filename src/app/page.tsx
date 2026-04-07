@@ -10,6 +10,8 @@ const WebampPlayer = dynamic(() => import("@/components/WebampPlayer"), {
   ssr: false,
 });
 import Preview from "@/components/Preview";
+import Guestbook from "@/components/Guestbook";
+import PartyLights from "@/components/PartyLights";
 import {
   loadImageFromFile,
   processImage,
@@ -55,7 +57,7 @@ const AWARDS = [
   { src: "https://cyber.dabamos.de/88x31/coolpage.gif", alt: "Cool Page" },
 ];
 
-const VISITOR_NUMBER = "00048731";
+// Visitor number is fetched from the API
 
 export default function Home() {
   const [image, setImage] = useState<HTMLImageElement | null>(null);
@@ -63,7 +65,16 @@ export default function Home() {
   const [resultCanvas, setResultCanvas] = useState<HTMLCanvasElement | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [ditheredCount, setDitheredCount] = useState(0);
+  const [visitorCount, setVisitorCount] = useState("00000000");
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Fetch + increment visitor count on mount
+  useEffect(() => {
+    fetch("/api/visit", { method: "POST" })
+      .then((r) => r.json())
+      .then((d) => setVisitorCount(String(d.count).padStart(8, "0")))
+      .catch(() => {});
+  }, []);
   const finalCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const prevImageRef = useRef<HTMLImageElement | null>(null);
 
@@ -196,7 +207,7 @@ export default function Home() {
             <div className="sidebar-text">
               <span style={{ color: "#ffff00" }}>This site made by</span>
               <br />
-              <span style={{ color: "#ff6600", fontWeight: "bold" }}>xX_D1th3rM4st3r_Xx</span>
+              <span style={{ color: "#ff6600", fontWeight: "bold" }}>totoken</span>
               <hr className="rainbow-hr" />
               <span style={{ color: "#ff69b4", fontSize: "10px" }}>
                 {">> "}
@@ -273,16 +284,14 @@ export default function Home() {
 
           {/* Guestbook */}
           <div className="sidebar-section" style={{ textAlign: "center" }}>
-            <button className="btn-retro tilt-left" onClick={() => alert("Thanks for signing! 📝")} style={{ fontSize: "11px" }}>
-              {"📖 Sign Guestbook!"}
-            </button>
+            <Guestbook />
           </div>
 
           {/* Email */}
           <div className="sidebar-section" style={{ textAlign: "center" }}>
             <span style={{ color: "#00ffff", fontSize: "10px" }}>
               {"📧 "}
-              <span style={{ color: "#ffff00" }}>xX_D1th3rM4st3r_Xx</span>
+              <span style={{ color: "#ffff00" }}>totoken</span>
               <br />
               <span style={{ color: "#808080" }}>@geocities.com</span>
             </span>
@@ -367,7 +376,7 @@ export default function Home() {
         <div style={{ marginBottom: "6px" }}>
           <span style={{ color: "#ffffff", fontSize: "12px" }}>You are visitor # </span>
           <span className="visitor-counter">
-            {VISITOR_NUMBER.split("").map((d, i) => (
+            {visitorCount.split("").map((d, i) => (
               <span key={i} className="visitor-digit">{d}</span>
             ))}
           </span>
@@ -375,9 +384,6 @@ export default function Home() {
 
         {/* Buttons row */}
         <div style={{ display: "flex", gap: "8px", justifyContent: "center", flexWrap: "wrap", marginBottom: "6px" }}>
-          <button className="btn-retro" onClick={() => alert("Thanks for signing! 📝")} style={{ fontSize: "11px" }}>
-            {"📖 Sign Guestbook!"}
-          </button>
           <button className="btn-retro" onClick={() => alert("Nice try hacker!! 😎")} style={{ fontSize: "11px" }}>
             {"👀 View Source"}
           </button>
@@ -416,6 +422,9 @@ export default function Home() {
           {"♪ Thanks for visiting DitherY2K ♪ Come back soon!!! ♪ Tell your friends!!! ♪ Add me to your bookmarks!!! ♪ Sign my guestbook!!! ♪ "}
         </span>
       </div>
+
+      {/* Party lights overlay (only when music plays) */}
+      <PartyLights />
 
       {/* Webamp — renders as floating Winamp player */}
       <WebampPlayer />
