@@ -21,24 +21,9 @@ body {
 body {
   font-family: "Comic Sans MS", "Comic Sans", cursive, sans-serif;
   color: #00ff00;
-  background-color: #000033;
-  background-image:
-    radial-gradient(1px 1px at 10% 15%, #ffffff 50%, transparent 100%),
-    radial-gradient(1px 1px at 25% 35%, #ffffcc 50%, transparent 100%),
-    radial-gradient(1px 1px at 50% 10%, #ffffff 50%, transparent 100%),
-    radial-gradient(1px 1px at 70% 60%, #ccccff 50%, transparent 100%),
-    radial-gradient(1px 1px at 85% 25%, #ffffff 50%, transparent 100%),
-    radial-gradient(1px 1px at 15% 75%, #ffffcc 50%, transparent 100%),
-    radial-gradient(1px 1px at 40% 80%, #ffffff 50%, transparent 100%),
-    radial-gradient(1px 1px at 60% 45%, #ccccff 50%, transparent 100%),
-    radial-gradient(1px 1px at 90% 85%, #ffffff 50%, transparent 100%),
-    radial-gradient(1px 1px at 5% 50%, #ffffcc 50%, transparent 100%),
-    radial-gradient(1px 1px at 35% 55%, #ffffff 50%, transparent 100%),
-    radial-gradient(1px 1px at 75% 90%, #ccccff 50%, transparent 100%),
-    radial-gradient(1px 1px at 55% 30%, #ffffff 50%, transparent 100%),
-    radial-gradient(1px 1px at 20% 95%, #ffffcc 50%, transparent 100%),
-    radial-gradient(1px 1px at 95% 5%, #ffffff 50%, transparent 100%);
-  background-size: 200px 200px;
+  background-color: #000000;
+  background-image: url("https://file.garden/ZWlUCY4S7Xz2vypS/archived%20backgrounds/stars%20%26%20space/bgstar45.gif");
+  background-repeat: repeat;
 }
 
 /* --- Win95 Scrollbar --- */
