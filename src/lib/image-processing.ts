@@ -2,7 +2,13 @@
 // DitherY2K — Image processing pipeline
 // =============================================================
 
-import { type DitherOptions, applyDithering, adjustBrightnessContrast } from "./dithering";
+import {
+  type DitherOptions,
+  type DigicamOptions,
+  applyDithering,
+  applyDigicam,
+  adjustBrightnessContrast,
+} from "./dithering";
 
 export type ResolutionPreset = "gameboy" | "snes" | "vga" | "original";
 
@@ -45,14 +51,12 @@ function resizeImage(
   const ctx = canvas.getContext("2d")!;
 
   if (targetW === 0 || targetH === 0) {
-    // "Original" — use source dimensions
     canvas.width = source.naturalWidth;
     canvas.height = source.naturalHeight;
     ctx.drawImage(source, 0, 0);
     return canvas;
   }
 
-  // Fit inside targetW × targetH while preserving aspect ratio
   const srcRatio = source.naturalWidth / source.naturalHeight;
   const tgtRatio = targetW / targetH;
 
@@ -83,23 +87,29 @@ function upscaleNearestNeighbor(
   canvas.width = source.width * factor;
   canvas.height = source.height * factor;
   const ctx = canvas.getContext("2d")!;
-
-  // Disable smoothing for crisp pixels
   ctx.imageSmoothingEnabled = false;
   ctx.drawImage(source, 0, 0, canvas.width, canvas.height);
   return canvas;
 }
 
-// ----- Full processing pipeline -----
+// ----- Processing options -----
 
-export interface ProcessingOptions extends DitherOptions {
+export type ProcessingMode = "dither" | "digicam";
+
+export interface ProcessingOptions {
+  mode: ProcessingMode;
   resolution: ResolutionPreset;
-  upscaleFactor: number; // 1, 2, 3, or 4
+  upscaleFactor: number;
+  brightness: number;
+  contrast: number;
+  // Dither-specific
+  dither: DitherOptions;
+  // Digicam-specific
+  digicam: DigicamOptions;
 }
 
 /**
- * Full pipeline: resize → brightness/contrast → dither → upscale.
- * Returns both the dithered canvas (small) and the final upscaled canvas.
+ * Full pipeline: resize → brightness/contrast → (dither OR digicam) → [date stamp] → upscale.
  */
 export function processImage(
   source: HTMLImageElement,
@@ -115,20 +125,24 @@ export function processImage(
   // Step 2: Brightness / Contrast
   adjustBrightnessContrast(imageData.data, options.brightness, options.contrast);
 
-  // Step 3: Dither
-  applyDithering(imageData, options);
+  // Step 3: Apply effect based on mode
+  if (options.mode === "digicam") {
+    applyDigicam(imageData, options.digicam);
+  } else {
+    applyDithering(imageData, options.dither);
+  }
 
   // Write back
   ctx.putImageData(imageData, 0, 0);
 
   // Step 3.5: Date stamp (digicam only, before upscale for pixelated look)
-  if (options.algorithm === "digicam" && options.digicamDateStamp) {
+  if (options.mode === "digicam" && options.digicam.dateStamp) {
     const fontSize = Math.max(8, Math.floor(resized.height * 0.04));
-    ctx.font = `${fontSize}px "Courier New", monospace`;
-    ctx.fillStyle = "rgba(255, 136, 0, 0.7)";
+    ctx.font = `bold ${fontSize}px "Courier New", monospace`;
+    ctx.fillStyle = "rgba(255, 136, 0, 0.75)";
     ctx.textAlign = "right";
     ctx.textBaseline = "bottom";
-    ctx.fillText("2003/04/07", resized.width - 4, resized.height - 4);
+    ctx.fillText("2003/04/07", resized.width - 4, resized.height - 3);
   }
 
   // Step 4: Upscale
@@ -141,10 +155,10 @@ export function processImage(
 
 export function downloadPNG(
   canvas: HTMLCanvasElement,
-  algorithm: string,
-  colorCount: number
+  mode: string,
+  detail: string
 ): void {
-  const filename = `dithery2k_${algorithm}_${colorCount}c.png`;
+  const filename = `dithery2k_${mode}_${detail}.png`;
   const link = document.createElement("a");
   link.download = filename;
   link.href = canvas.toDataURL("image/png");

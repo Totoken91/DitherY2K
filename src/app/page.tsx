@@ -11,18 +11,21 @@ import {
 } from "@/lib/image-processing";
 
 const DEFAULT_CONTROLS: ControlValues = {
-  algorithm: "floyd-steinberg",
-  colorCount: 2,
-  threshold: 128,
-  brightness: 0,
-  contrast: 0,
+  mode: "dither",
+  // Shared
   resolution: "vga",
   upscaleEnabled: false,
   upscaleFactor: 2,
-  // Digicam defaults
-  digicamNoise: 40,
-  digicamJpegQuality: 60,
-  digicamBloom: 20,
+  brightness: 0,
+  contrast: 0,
+  // Dither
+  algorithm: "floyd-steinberg",
+  colorCount: 2,
+  threshold: 128,
+  // Digicam
+  digicamNoise: 35,
+  digicamJpegQuality: 65,
+  digicamBloom: 25,
   digicamColorCast: "warm",
   digicamVignette: true,
   digicamChromatic: true,
@@ -65,13 +68,27 @@ export default function Home() {
         setTimeout(() => {
           try {
             const result = processImage(img, {
-              algorithm: ctrl.algorithm,
-              colorCount: ctrl.colorCount,
-              threshold: ctrl.threshold,
-              brightness: ctrl.brightness,
-              contrast: ctrl.contrast,
+              mode: ctrl.mode,
               resolution: ctrl.resolution,
               upscaleFactor: ctrl.upscaleEnabled ? ctrl.upscaleFactor : 1,
+              brightness: ctrl.brightness,
+              contrast: ctrl.contrast,
+              dither: {
+                algorithm: ctrl.algorithm,
+                colorCount: ctrl.colorCount,
+                threshold: ctrl.threshold,
+                brightness: ctrl.brightness,
+                contrast: ctrl.contrast,
+              },
+              digicam: {
+                noise: ctrl.digicamNoise,
+                jpegQuality: ctrl.digicamJpegQuality,
+                bloom: ctrl.digicamBloom,
+                colorCast: ctrl.digicamColorCast,
+                vignette: ctrl.digicamVignette,
+                chromatic: ctrl.digicamChromatic,
+                dateStamp: ctrl.digicamDateStamp,
+              },
             });
             finalCanvasRef.current = result.final;
             setResultCanvas(result.final);
@@ -110,9 +127,12 @@ export default function Home() {
 
   const handleDownload = useCallback(() => {
     if (finalCanvasRef.current) {
-      downloadPNG(finalCanvasRef.current, controls.algorithm, controls.colorCount);
+      const detail = controls.mode === "dither"
+        ? `${controls.algorithm}_${controls.colorCount}c`
+        : "digicam";
+      downloadPNG(finalCanvasRef.current, controls.mode, detail);
     }
-  }, [controls.algorithm, controls.colorCount]);
+  }, [controls.mode, controls.algorithm, controls.colorCount]);
 
   return (
     <div id="top">
