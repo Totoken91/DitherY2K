@@ -23,19 +23,19 @@ const DEFAULT_CONTROLS: ControlValues = {
 
 const BADGES = [
   { src: "https://cyber.dabamos.de/88x31/netscape.gif", alt: "Netscape Now" },
+  { src: "https://cyber.dabamos.de/88x31/ie_anim.gif", alt: "Internet Explorer" },
   { src: "https://cyber.dabamos.de/88x31/html.gif", alt: "HTML" },
   { src: "https://cyber.dabamos.de/88x31/notepad.gif", alt: "Made with Notepad" },
   { src: "https://cyber.dabamos.de/88x31/javascript.gif", alt: "JavaScript" },
   { src: "https://cyber.dabamos.de/88x31/css.gif", alt: "CSS" },
   { src: "https://cyber.dabamos.de/88x31/fire.gif", alt: "Fire" },
-  { src: "https://cyber.dabamos.de/88x31/anybrow3.gif", alt: "Any Browser" },
-  { src: "https://cyber.dabamos.de/88x31/powered.gif", alt: "Powered By" },
+  { src: "https://cyber.dabamos.de/88x31/any_browser.gif", alt: "Any Browser" },
 ];
 
 const AWARDS = [
-  { src: "https://cyber.dabamos.de/88x31/cool.gif", alt: "Cool Site" },
-  { src: "https://cyber.dabamos.de/88x31/geocities.gif", alt: "GeoCities" },
-  { src: "https://cyber.dabamos.de/88x31/valid_html.gif", alt: "Valid HTML" },
+  { src: "https://cyber.dabamos.de/88x31/best_viewed_with_eyes.gif", alt: "Best Viewed With Eyes" },
+  { src: "https://cyber.dabamos.de/88x31/hotaward.gif", alt: "Hot Award" },
+  { src: "https://cyber.dabamos.de/88x31/coolpage.gif", alt: "Cool Page" },
 ];
 
 const VISITOR_NUMBER = "00048731";
