@@ -70,20 +70,21 @@ function findClosestColor(color: RGB, palette: RGB[]): RGB {
 /**
  * Generate a uniform palette with `count` colors.
  * For count=2 → black & white.
- * Otherwise distributes evenly across RGB cube.
+ * Otherwise generates the full RGB cube for the given step count
+ * to ensure all corners (including white, yellow) are always present.
  */
 export function generatePalette(count: number): RGB[] {
   if (count <= 2) return [[0, 0, 0], [255, 255, 255]];
 
   // Number of steps per channel: cube root rounded up
   const stepsPerChannel = Math.max(2, Math.ceil(Math.pow(count, 1 / 3)));
-  const palette: RGB[] = [];
 
-  outer:
+  // Always generate the FULL cube — don't truncate early.
+  // Truncating causes missing corners (no white/yellow at low counts).
+  const palette: RGB[] = [];
   for (let r = 0; r < stepsPerChannel; r++) {
     for (let g = 0; g < stepsPerChannel; g++) {
       for (let b = 0; b < stepsPerChannel; b++) {
-        if (palette.length >= count) break outer;
         palette.push([
           Math.round((r * 255) / (stepsPerChannel - 1)),
           Math.round((g * 255) / (stepsPerChannel - 1)),
