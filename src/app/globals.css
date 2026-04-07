@@ -577,22 +577,7 @@ button:active, .btn-retro:active, .btn-download:active {
   filter: drop-shadow(0 0 8px rgba(255, 150, 100, 0.6));
   image-rendering: auto;
 }
-/* Beat-synced bounce — left hampopo (faster, offset) */
-.hampopo-beat-left {
-  animation: hampopo-beat-l 0.45s ease-in-out infinite;
-}
-@keyframes hampopo-beat-l {
-  0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
-  50% { transform: translateY(-12px) rotate(-5deg) scale(1.05); }
-}
-/* Beat-synced bounce — right hampopo (slightly slower, mirrored) */
-.hampopo-beat-right {
-  animation: hampopo-beat-r 0.55s ease-in-out infinite;
-}
-@keyframes hampopo-beat-r {
-  0%, 100% { transform: translateY(0) scaleX(-1) scale(1); }
-  50% { transform: translateY(-14px) scaleX(-1) rotate(5deg) scale(1.05); }
-}
+/* Hampopo bounce is driven by JS (Web Audio API bass level) */
 
 /* Stars that pop around hampopo */
 .hampopo-star {

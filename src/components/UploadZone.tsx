@@ -57,7 +57,7 @@ export default function UploadZone({ onImageLoaded }: UploadZoneProps) {
         padding: "18px 12px",
         textAlign: "center",
         background: dragging ? "rgba(0,255,0,0.08)" : "rgba(0,0,0,0.4)",
-        cursor: "pointer",
+        cursor: 'url("https://kiunlo.neocities.org/cursors/WoW/frostmourne_cursor.png"), pointer',
       }}
     >
       <input
