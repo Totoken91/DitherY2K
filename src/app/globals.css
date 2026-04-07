@@ -61,8 +61,18 @@ a:hover {
   color: #ffff00;
   text-decoration: underline overline;
 }
-a, button {
-  cursor: pointer;
+/* All clickable elements: glowing cursor + hover effect */
+a, button, select, input[type="checkbox"], label[style*="cursor"],
+.btn-retro, .btn-download, .badge-88x31, .select-retro {
+  cursor: url("https://kiunlo.neocities.org/cursors/WoW/frostmourne_cursor.png"), pointer;
+}
+a:hover, button:hover, .btn-retro:hover, .btn-download:hover,
+.badge-88x31:hover, .select-retro:hover, .sidebar-link:hover {
+  filter: brightness(1.2);
+  transition: filter 0.15s;
+}
+button:active, .btn-retro:active, .btn-download:active {
+  filter: brightness(0.8);
 }
 
 /* --- WordArt Title --- */
@@ -564,15 +574,24 @@ a, button {
   display: inline-block;
 }
 .hampopo {
-  animation: hampopo-bounce 2s ease-in-out infinite;
   filter: drop-shadow(0 0 8px rgba(255, 150, 100, 0.6));
   image-rendering: auto;
 }
-@keyframes hampopo-bounce {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  25% { transform: translateY(-8px) rotate(-3deg); }
-  50% { transform: translateY(-2px) rotate(0deg); }
-  75% { transform: translateY(-10px) rotate(3deg); }
+/* Beat-synced bounce — left hampopo (faster, offset) */
+.hampopo-beat-left {
+  animation: hampopo-beat-l 0.45s ease-in-out infinite;
+}
+@keyframes hampopo-beat-l {
+  0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+  50% { transform: translateY(-12px) rotate(-5deg) scale(1.05); }
+}
+/* Beat-synced bounce — right hampopo (slightly slower, mirrored) */
+.hampopo-beat-right {
+  animation: hampopo-beat-r 0.55s ease-in-out infinite;
+}
+@keyframes hampopo-beat-r {
+  0%, 100% { transform: translateY(0) scaleX(-1) scale(1); }
+  50% { transform: translateY(-14px) scaleX(-1) rotate(5deg) scale(1.05); }
 }
 
 /* Stars that pop around hampopo */

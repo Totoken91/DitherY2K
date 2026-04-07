@@ -2,10 +2,16 @@
 
 import { useEffect, useRef, useState } from "react";
 
+// Broadcast playing state via custom events so other components can react
+function broadcastPlaying(isPlaying: boolean) {
+  window.dispatchEvent(new CustomEvent("webamp-playing", { detail: isPlaying }));
+}
+
 export default function WebampPlayer() {
   const containerRef = useRef<HTMLDivElement>(null);
   const webampRef = useRef<unknown>(null);
   const initedRef = useRef(false);
+  const pollRef = useRef<ReturnType<typeof setInterval>>(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -36,22 +42,33 @@ export default function WebampPlayer() {
       await webamp.renderWhenReady(containerRef.current!);
       webampRef.current = webamp;
 
-      // Auto-play
       webamp.play();
+      broadcastPlaying(true);
 
-      // If user closes Webamp via its own close button, hide our toggle
+      // Poll playing state (webamp doesn't have a reliable event for pause/stop)
+      pollRef.current = setInterval(() => {
+        const status = webamp.getMediaStatus();
+        broadcastPlaying(status === "PLAYING");
+      }, 300);
+
       webamp.onClose(() => {
+        broadcastPlaying(false);
+        if (pollRef.current) clearInterval(pollRef.current);
         setVisible(false);
         initedRef.current = false;
       });
     };
 
     initWebamp();
+
+    return () => {
+      broadcastPlaying(false);
+      if (pollRef.current) clearInterval(pollRef.current);
+    };
   }, [visible]);
 
   return (
     <>
-      {/* Toggle button — always visible */}
       {!visible && (
         <button
           className="btn-retro"
@@ -68,8 +85,6 @@ export default function WebampPlayer() {
           {"🎵 Open Winamp"}
         </button>
       )}
-
-      {/* Webamp container — only mounted when visible */}
       {visible && <div ref={containerRef} id="webamp-container" />}
     </>
   );
