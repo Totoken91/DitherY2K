@@ -288,12 +288,6 @@ export default function Home() {
             </button>
           </div>
 
-          {/* Webamp */}
-          <div className="sidebar-section" style={{ padding: "4px", overflow: "hidden" }}>
-            <div className="sidebar-title">{"♪ Now Playing ♪"}</div>
-            <WebampPlayer />
-          </div>
-
           {/* Email */}
           <div className="sidebar-section" style={{ textAlign: "center" }}>
             <span style={{ color: "#00ffff", fontSize: "10px" }}>
@@ -432,6 +426,9 @@ export default function Home() {
           {"♪ Thanks for visiting DitherY2K ♪ Come back soon!!! ♪ Tell your friends!!! ♪ Add me to your bookmarks!!! ♪ Sign my guestbook!!! ♪ "}
         </span>
       </div>
+
+      {/* Webamp — renders as floating Winamp player */}
+      <WebampPlayer />
     </div>
   );
 }
