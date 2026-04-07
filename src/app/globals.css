@@ -537,6 +537,21 @@ a, button {
   color: #ffff00;
 }
 
+/* --- Webamp override: don't let it cover the page --- */
+#webamp {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: visible !important;
+  pointer-events: none !important;
+  z-index: 1000 !important;
+}
+#webamp > div {
+  pointer-events: auto !important;
+}
+
 /* --- Responsive --- */
 @media (max-width: 700px) {
   .geo-table { display: block; }
