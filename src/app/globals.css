@@ -63,11 +63,10 @@ a:hover {
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  text-shadow: 4px 4px 0px #000, -1px -1px 0 #000;
   transform: skewY(-3deg);
   display: inline-block;
   letter-spacing: 2px;
-  filter: drop-shadow(3px 3px 0 #000);
+  filter: drop-shadow(3px 3px 0 #000) drop-shadow(-1px -1px 0 #000);
   line-height: 1.1;
 }
 
