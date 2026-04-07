@@ -155,7 +155,19 @@ export default function Home() {
           <img src="/gifs/fire-bar.png" alt="" style={{ width: "100%", height: "8px" }} />
         </div>
 
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "6px", margin: "6px 0" }}>
+        {/* Hampopo mascot */}
+        <div className="hampopo-container" style={{ margin: "4px 0" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/hampopo.png" alt="Hampopo" className="hampopo" style={{ width: "64px", height: "auto" }} />
+          <span className="hampopo-star">{"✦"}</span>
+          <span className="hampopo-star">{"★"}</span>
+          <span className="hampopo-star">{"✧"}</span>
+          <span className="hampopo-star">{"❤"}</span>
+          <span className="hampopo-star">{"✦"}</span>
+          <span className="hampopo-star">{"★"}</span>
+        </div>
+
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "6px", margin: "4px 0" }}>
           <span className="spin-star">{"✦"}</span>
           <span className="spin-star-reverse">{"✧"}</span>
           <h1

@@ -558,6 +558,73 @@ a, button {
   overflow: visible !important;
 }
 
+/* --- Hampopo kawaii bounce --- */
+.hampopo-container {
+  position: relative;
+  display: inline-block;
+}
+.hampopo {
+  animation: hampopo-bounce 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(255, 150, 100, 0.6));
+  image-rendering: auto;
+}
+@keyframes hampopo-bounce {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-8px) rotate(-3deg); }
+  50% { transform: translateY(-2px) rotate(0deg); }
+  75% { transform: translateY(-10px) rotate(3deg); }
+}
+
+/* Stars that pop around hampopo */
+.hampopo-star {
+  position: absolute;
+  font-size: 14px;
+  pointer-events: none;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  opacity: 0;
+}
+.hampopo-star:nth-child(2) {
+  top: -8px; left: -10px;
+  animation: star-pop 2.5s 0s infinite;
+  color: #ffff00;
+}
+.hampopo-star:nth-child(3) {
+  top: -12px; right: -8px;
+  animation: star-pop 2s 0.4s infinite;
+  color: #ff69b4;
+}
+.hampopo-star:nth-child(4) {
+  bottom: 0; left: -14px;
+  animation: star-pop 2.2s 0.8s infinite;
+  color: #00ffff;
+}
+.hampopo-star:nth-child(5) {
+  bottom: -4px; right: -12px;
+  animation: star-pop 1.8s 1.2s infinite;
+  color: #ff00ff;
+}
+.hampopo-star:nth-child(6) {
+  top: 50%; left: -18px;
+  animation: star-pop 2.4s 0.6s infinite;
+  color: #ffff00;
+  font-size: 10px;
+}
+.hampopo-star:nth-child(7) {
+  top: 30%; right: -16px;
+  animation: star-pop 2.1s 1s infinite;
+  color: #00ff00;
+  font-size: 12px;
+}
+
+@keyframes star-pop {
+  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+  15% { opacity: 1; transform: scale(1.3) rotate(20deg); }
+  30% { opacity: 1; transform: scale(1) rotate(-10deg); }
+  50% { opacity: 0.8; transform: scale(1.1) rotate(15deg); }
+  70% { opacity: 0; transform: scale(0.5) rotate(-20deg); }
+}
+
 /* --- Responsive --- */
 @media (max-width: 700px) {
   .geo-table { display: block; }
