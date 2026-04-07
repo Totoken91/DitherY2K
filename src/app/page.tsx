@@ -23,21 +23,21 @@ const DEFAULT_CONTROLS: ControlValues = {
 
 const BADGES = [
   { src: "https://cyber.dabamos.de/88x31/netscape.gif", alt: "Netscape Now" },
-  { src: "https://cyber.dabamos.de/88x31/ie_logo.gif", alt: "IE" },
+  { src: "https://cyber.dabamos.de/88x31/ie_logo.gif", alt: "Internet Explorer" },
   { src: "https://cyber.dabamos.de/88x31/html.gif", alt: "HTML" },
   { src: "https://cyber.dabamos.de/88x31/notepad.gif", alt: "Made with Notepad" },
-  { src: "https://cyber.dabamos.de/88x31/www.gif", alt: "WWW" },
+  { src: "https://cyber.dabamos.de/88x31/www.gif", alt: "World Wide Web" },
   { src: "https://cyber.dabamos.de/88x31/javascript.gif", alt: "JavaScript" },
   { src: "https://cyber.dabamos.de/88x31/css.gif", alt: "CSS" },
   { src: "https://cyber.dabamos.de/88x31/fire.gif", alt: "Fire" },
 ];
 
+const VISITOR_NUMBER = "00048731";
+
 export default function Home() {
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   const [controls, setControls] = useState<ControlValues>(DEFAULT_CONTROLS);
-  const [resultCanvas, setResultCanvas] = useState<HTMLCanvasElement | null>(
-    null
-  );
+  const [resultCanvas, setResultCanvas] = useState<HTMLCanvasElement | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const finalCanvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -90,11 +90,7 @@ export default function Home() {
 
   const handleDownload = useCallback(() => {
     if (finalCanvasRef.current) {
-      downloadPNG(
-        finalCanvasRef.current,
-        controls.algorithm,
-        controls.colorCount
-      );
+      downloadPNG(finalCanvasRef.current, controls.algorithm, controls.colorCount);
     }
   }, [controls.algorithm, controls.colorCount]);
 
@@ -103,23 +99,58 @@ export default function Home() {
       {/* ===== MARQUEE ===== */}
       <div className="marquee">
         <span>
-          {"★ Welcome to DitherY2K ★ The BEST dithering tool on the web!!! ★ Make your images look like it's 1999!!! ★ FREE forever!!! ★ No sign-up required!!! ★ "}
+          {"★ Welcome to DitherY2K ★ The BEST dithering tool on the web!!! ★ Make your images look like it's 1999!!! ★ FREE forever!!! ★ No sign-up required!!! ★ Now with 4 algorithms!!! ★ "}
         </span>
       </div>
 
       {/* ===== HEADER ===== */}
       <div className="geo-header">
-        <h1 className="wordart">DitherY2K</h1>
+        {/* Fire divider top */}
+        <div className="gif-divider">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="https://web.archive.org/web/2009/http://www.geocities.com/SoHo/7373/bar.gif"
+            alt="decorative fire bar"
+            style={{ height: "16px" }}
+            onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+          />
+        </div>
+
+        <h1 className="wordart">{"✧ DitherY2K ✧"}</h1>
         <br />
         <span className="wordart-subtitle">
-          {'"'}The Ultimate Retro Image Ditherer!!!{'"'}
+          {'"The Ultimate Retro Image Ditherer!!!"'}
         </span>
-        <div style={{ marginTop: "10px" }}>
+        <span className="new-badge">NEW!</span>
+
+        <div style={{ marginTop: "12px", display: "flex", justifyContent: "center", gap: "12px", alignItems: "center" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="https://textfiles.com/underconstruction/HesijeLing5049construction.gif"
             alt="Under Construction"
+            className="sparkle"
             style={{ imageRendering: "pixelated" }}
+          />
+          <span className="fire-text" style={{ fontFamily: "Impact, sans-serif", fontSize: "14px" }}>
+            {">>> UNDER CONSTRUCTION <<<"}
+          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="https://textfiles.com/underconstruction/HesijeLing5049construction.gif"
+            alt="Under Construction"
+            className="sparkle"
+            style={{ imageRendering: "pixelated" }}
+          />
+        </div>
+
+        {/* Fire divider bottom */}
+        <div className="gif-divider" style={{ marginTop: "8px" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="https://web.archive.org/web/2009/http://www.geocities.com/SoHo/7373/bar.gif"
+            alt="decorative fire bar"
+            style={{ height: "16px" }}
+            onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
           />
         </div>
       </div>
@@ -130,6 +161,21 @@ export default function Home() {
       <div className="geo-table" style={{ padding: "0 8px" }}>
         {/* --- SIDEBAR --- */}
         <div className="geo-sidebar">
+          {/* Welcome message */}
+          <div className="sidebar-section">
+            <div className="sidebar-title glow-pink">{"★ Welcome! ★"}</div>
+            <div className="sidebar-text" style={{ color: "#ffff00" }}>
+              Welcome to my awesome dithering tool!! Made with{" "}
+              <span style={{ color: "#ff0000" }}>{"<3"}</span> and lots of{" "}
+              <span style={{ color: "#00ffff" }}>JavaScript</span>
+              <br /><br />
+              <span style={{ color: "#ff69b4", fontSize: "11px" }}>
+                {">> "}Best viewed in{" "}
+                <span className="blink" style={{ color: "#00ff00" }}>800x600</span>
+              </span>
+            </div>
+          </div>
+
           {/* Cool Links */}
           <div className="sidebar-section">
             <div className="sidebar-title">{"☆ Cool Links ☆"}</div>
@@ -148,6 +194,7 @@ export default function Home() {
               rel="noopener noreferrer"
             >
               {">> "}Ditherpunk article
+              <span className="new-badge">NEW!</span>
             </a>
             <a
               className="sidebar-link"
@@ -157,27 +204,37 @@ export default function Home() {
             >
               {">> "}Ordered Dithering
             </a>
+            <a
+              className="sidebar-link"
+              href="https://en.wikipedia.org/wiki/Atkinson_dithering"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {">> "}Atkinson (Mac)
+            </a>
           </div>
 
           {/* Site Stats */}
           <div className="sidebar-section">
             <div className="sidebar-title">{"☆ Site Stats ☆"}</div>
             <div className="sidebar-text">
-              <span style={{ color: "#00ffff" }}>Online since:</span>
+              <span style={{ color: "#00ffff" }}>{">> "}Online since:</span>
               <br />
               <span style={{ color: "#ffff00" }}>January 2003</span>
+              <br /><br />
+              <span style={{ color: "#00ffff" }}>{">> "}Total hits:</span>
               <br />
-              <br />
-              <span style={{ color: "#00ffff" }}>Total hits:</span>
-              <br />
-              <span style={{ color: "#ff69b4" }}>
-                <span className="blink">48,731</span>
+              <span className="blink" style={{ color: "#ff69b4", fontWeight: "bold" }}>
+                48,731
               </span>
-              <br />
-              <br />
-              <span style={{ color: "#00ffff" }}>Last update:</span>
+              <br /><br />
+              <span style={{ color: "#00ffff" }}>{">> "}Last update:</span>
               <br />
               <span style={{ color: "#ffff00" }}>April 2026</span>
+              <br /><br />
+              <span style={{ color: "#00ffff" }}>{">> "}Webmaster:</span>
+              <br />
+              <span style={{ color: "#ff6600" }}>xX_D1th3rM4st3r_Xx</span>
             </div>
           </div>
 
@@ -189,9 +246,12 @@ export default function Home() {
               alt="Under Construction"
               style={{ imageRendering: "pixelated", maxWidth: "100%" }}
             />
+            <div style={{ color: "#ff0000", fontSize: "11px", marginTop: "4px" }}>
+              {"More features coming soon!!!"}
+            </div>
           </div>
 
-          {/* Badges */}
+          {/* Sidebar Badges */}
           <div className="sidebar-section">
             <div className="sidebar-title">{"☆ Badges ☆"}</div>
             <div
@@ -213,33 +273,79 @@ export default function Home() {
               ))}
             </div>
           </div>
+
+          {/* Guestbook in sidebar */}
+          <div className="sidebar-section" style={{ textAlign: "center" }}>
+            <button
+              className="btn-retro tilt-left"
+              onClick={() => alert("Thanks for signing! 📝")}
+              style={{ fontSize: "12px" }}
+            >
+              {"📖 Sign my Guestbook!"}
+            </button>
+          </div>
         </div>
 
         {/* --- MAIN CONTENT --- */}
         <div className="geo-main">
           {/* Upload zone */}
-          <div style={{ marginBottom: "12px" }}>
+          <div className="groove-box">
             <UploadZone onImageLoaded={handleImageLoaded} />
           </div>
 
           {/* Preview */}
           {image && (
-            <Preview
-              originalImage={image}
-              resultCanvas={resultCanvas}
-              isProcessing={isProcessing}
-            />
+            <div className="groove-box">
+              <Preview
+                originalImage={image}
+                resultCanvas={resultCanvas}
+                isProcessing={isProcessing}
+              />
+            </div>
           )}
 
           {/* Controls */}
           {image && (
-            <div style={{ marginTop: "12px" }}>
+            <div style={{ marginTop: "8px" }}>
               <Controls
                 values={controls}
                 onChange={setControls}
                 onDownload={handleDownload}
                 hasImage={!!resultCanvas}
               />
+            </div>
+          )}
+
+          {/* Info section */}
+          {!image && (
+            <div className="outset-box" style={{ marginTop: "12px" }}>
+              <div style={{
+                fontFamily: "Impact, sans-serif",
+                color: "#ff00ff",
+                fontSize: "18px",
+                textShadow: "2px 2px 0 #000",
+                marginBottom: "8px",
+                textAlign: "center",
+              }}>
+                {"~ HOW TO USE ~"}
+              </div>
+              <div style={{ color: "#ffffff", fontSize: "13px", lineHeight: "1.8" }}>
+                <span style={{ color: "#ffff00" }}>{"1."}</span>{" "}
+                Upload an image (drag & drop or click)
+                <br />
+                <span style={{ color: "#ffff00" }}>{"2."}</span>{" "}
+                Pick a <span style={{ color: "#00ffff" }}>dithering algorithm</span>
+                <br />
+                <span style={{ color: "#ffff00" }}>{"3."}</span>{" "}
+                Adjust colors, resolution, brightness & contrast
+                <br />
+                <span style={{ color: "#ffff00" }}>{"4."}</span>{" "}
+                Download your <span className="rainbow-text">sick retro image!!!</span>
+                <br /><br />
+                <span style={{ color: "#ff69b4", fontSize: "11px" }}>
+                  {">> "}Supports Floyd-Steinberg, Atkinson, Ordered Bayer & Threshold
+                </span>
+              </div>
             </div>
           )}
         </div>
@@ -249,20 +355,56 @@ export default function Home() {
 
       {/* ===== FOOTER ===== */}
       <div className="geo-footer">
-        <div style={{ marginBottom: "10px" }}>
-          <span style={{ color: "#ffffff", fontSize: "14px" }}>
-            You are visitor #{" "}
-          </span>
-          <span className="visitor-counter">00048731</span>
+        {/* Divider GIF */}
+        <div className="gif-divider" style={{ marginBottom: "12px" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="https://web.archive.org/web/2009/http://www.geocities.com/SoHo/7373/bar.gif"
+            alt="decorative bar"
+            style={{ height: "12px" }}
+            onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+          />
         </div>
 
-        <div style={{ marginBottom: "10px" }}>
+        {/* Visitor Counter */}
+        <div style={{ marginBottom: "12px" }}>
+          <span style={{ color: "#ffffff", fontSize: "14px" }}>
+            You are visitor #
+          </span>
+          <span
+            className="visitor-counter"
+            style={{
+              display: "inline-flex",
+              gap: "0",
+              padding: "4px 6px",
+              border: "2px inset #808080",
+              background: "#000",
+            }}
+          >
+            {VISITOR_NUMBER.split("").map((digit, i) => (
+              <span key={i} className="visitor-digit">
+                {digit}
+              </span>
+            ))}
+          </span>
+        </div>
+
+        {/* Guestbook button */}
+        <div style={{ marginBottom: "12px" }}>
           <button
             className="btn-retro tilt-right"
             onClick={() => alert("Thanks for signing! 📝")}
           >
             {"📖 Sign my Guestbook!"}
           </button>
+        </div>
+
+        {/* Email the webmaster */}
+        <div style={{ marginBottom: "12px" }}>
+          <span style={{ color: "#00ffff", fontSize: "12px" }}>
+            {"📧 Email the webmaster: "}
+            <span style={{ color: "#ffff00" }}>xX_D1th3rM4st3r_Xx@geocities.com</span>
+          </span>
         </div>
 
         {/* Footer badges */}
@@ -272,7 +414,7 @@ export default function Home() {
             flexWrap: "wrap",
             gap: "4px",
             justifyContent: "center",
-            marginBottom: "10px",
+            marginBottom: "12px",
           }}
         >
           {BADGES.map((badge) => (
@@ -286,14 +428,29 @@ export default function Home() {
           ))}
         </div>
 
-        <div
-          style={{
-            color: "#808080",
-            fontSize: "12px",
-            fontFamily: "'Comic Sans MS', cursive",
-          }}
-        >
-          {"© 2003-2026 DitherY2K | Best viewed in Netscape Navigator 4.0 at 800x600"}
+        {/* Divider GIF */}
+        <div className="gif-divider" style={{ marginBottom: "8px" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="https://web.archive.org/web/2009/http://www.geocities.com/SoHo/7373/bar.gif"
+            alt="decorative bar"
+            style={{ height: "12px" }}
+            onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+          />
+        </div>
+
+        <div style={{
+          color: "#808080",
+          fontSize: "11px",
+          fontFamily: "'Comic Sans MS', cursive",
+        }}>
+          {"© 2003-2026 DitherY2K"}
+          <br />
+          <span style={{ color: "#666" }}>
+            {"Best viewed in Netscape Navigator 4.0 at 800x600 | Made with "}
+            <span style={{ color: "#ff0000" }}>{"♥"}</span>
+            {" and too much free time"}
+          </span>
         </div>
       </div>
     </div>

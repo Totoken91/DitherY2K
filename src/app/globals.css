@@ -14,7 +14,8 @@ html,
 body {
   height: 100%;
   overflow-x: hidden;
-  cursor: crosshair;
+  /* Custom pixelated crosshair cursor (16x16 data URI) */
+  cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAMklEQVQ4y2P4////fwYKABMDlYARbcD/UcMYGA4ePEh9LxgaGjIwMDAMfBgMmjiGQxgAAEurL/mVGdIAAAAASUVORK5CYII=") 8 8, crosshair;
 }
 
 body {
@@ -314,6 +315,129 @@ a:hover {
   cursor: pointer;
 }
 
+/* --- Visitor counter individual digit --- */
+.visitor-digit {
+  display: inline-block;
+  background: #111;
+  border: 1px solid #333;
+  padding: 2px 4px;
+  margin: 0 1px;
+  font-family: "Courier New", monospace;
+  font-size: 18px;
+  font-weight: bold;
+  color: #00ff00;
+  text-shadow: 0 0 6px #00ff00;
+  min-width: 18px;
+  text-align: center;
+}
+
+/* --- Glow text effect --- */
+.glow-green {
+  text-shadow: 0 0 4px #00ff00, 0 0 8px #00ff00;
+}
+
+.glow-pink {
+  text-shadow: 0 0 4px #ff69b4, 0 0 8px #ff69b4;
+}
+
+.glow-cyan {
+  text-shadow: 0 0 4px #00ffff, 0 0 8px #00ffff;
+}
+
+/* --- Fire text (header decoration) --- */
+.fire-text {
+  color: #ff6600;
+  text-shadow: 0 0 4px #ff0000, 0 0 8px #ff6600, 0 0 16px #ffff00;
+}
+
+/* --- Decorative GIF divider container --- */
+.gif-divider {
+  text-align: center;
+  margin: 6px 0;
+  line-height: 0;
+}
+
+.gif-divider img {
+  max-width: 100%;
+  image-rendering: pixelated;
+  height: auto;
+}
+
+/* --- "NEW!" badge --- */
+.new-badge {
+  display: inline-block;
+  color: #ff0000;
+  font-size: 10px;
+  font-weight: bold;
+  font-family: "Comic Sans MS", cursive;
+  animation: blink-anim 0.8s step-end infinite;
+  vertical-align: super;
+  margin-left: 4px;
+}
+
+/* --- Scrolling stars background for header --- */
+.geo-header {
+  text-align: center;
+  padding: 20px 12px;
+  border-bottom: 3px groove #808080;
+  background:
+    radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,0.4) 50%, transparent 100%),
+    radial-gradient(2px 2px at 80% 70%, rgba(255,255,255,0.3) 50%, transparent 100%),
+    radial-gradient(1px 1px at 50% 50%, rgba(255,255,255,0.2) 50%, transparent 100%),
+    linear-gradient(180deg, rgba(51, 0, 102, 0.7) 0%, rgba(0, 0, 80, 0.7) 100%);
+}
+
+/* --- Groove border box for sections --- */
+.groove-box {
+  border: 3px groove #c0c0c0;
+  padding: 10px;
+  margin: 8px 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* --- Outset border for special elements --- */
+.outset-box {
+  border: 3px outset #c0c0c0;
+  padding: 8px;
+  background: rgba(0, 0, 128, 0.3);
+}
+
+/* --- Animated rainbow text --- */
+.rainbow-text {
+  background: linear-gradient(
+    90deg,
+    #ff0000,
+    #ff6600,
+    #ffff00,
+    #00ff00,
+    #00ffff,
+    #0000ff,
+    #8b00ff,
+    #ff0000
+  );
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: rainbow-shift 3s linear infinite;
+  font-weight: bold;
+}
+
+@keyframes rainbow-shift {
+  from { background-position: 0% 50%; }
+  to { background-position: 200% 50%; }
+}
+
+/* --- Sparkle animation for decorative elements --- */
+.sparkle {
+  animation: sparkle-pulse 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes sparkle-pulse {
+  from { opacity: 0.6; transform: scale(1); }
+  to { opacity: 1; transform: scale(1.1); }
+}
+
 /* --- Responsive: stack on small screens --- */
 @media (max-width: 700px) {
   .geo-table {
@@ -323,5 +447,8 @@ a:hover {
   .geo-main {
     display: block;
     width: 100%;
+  }
+  .wordart {
+    font-size: 36px;
   }
 }
