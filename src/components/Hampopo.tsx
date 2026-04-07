@@ -1,52 +1,17 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 
 export default function Hampopo() {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [bass, setBass] = useState(0);
-  const leftRef = useRef<HTMLImageElement>(null);
-  const rightRef = useRef<HTMLImageElement>(null);
-  const starsLeftRef = useRef<HTMLDivElement>(null);
-  const starsRightRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handler = (e: Event) => {
-      const { playing, bass: b } = (e as CustomEvent).detail;
-      setIsPlaying(playing);
-      setBass(b);
+      setIsPlaying((e as CustomEvent).detail);
     };
-    window.addEventListener("webamp-audio", handler);
-    return () => window.removeEventListener("webamp-audio", handler);
+    window.addEventListener("webamp-playing", handler);
+    return () => window.removeEventListener("webamp-playing", handler);
   }, []);
-
-  // Apply bass-driven transforms directly via refs for smooth performance
-  useEffect(() => {
-    if (!isPlaying) {
-      // Reset transforms when not playing
-      if (leftRef.current) leftRef.current.style.transform = "none";
-      if (rightRef.current) rightRef.current.style.transform = "scaleX(-1)";
-      return;
-    }
-
-    // Bass drives the bounce height and scale
-    const bounce = bass * 18; // max 18px jump
-    const scale = 1 + bass * 0.08; // max 8% scale up
-    const rotL = bass * -6; // tilt left
-    const rotR = bass * 6; // tilt right
-
-    if (leftRef.current) {
-      leftRef.current.style.transform =
-        `translateY(-${bounce}px) rotate(${rotL}deg) scale(${scale})`;
-    }
-    if (rightRef.current) {
-      rightRef.current.style.transform =
-        `translateY(-${bounce}px) scaleX(-1) rotate(${rotR}deg) scale(${scale})`;
-    }
-  }, [bass, isPlaying]);
-
-  // Stars visibility based on bass threshold
-  const showStars = isPlaying && bass > 0.3;
 
   return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "6px", margin: "4px 0" }}>
@@ -54,21 +19,20 @@ export default function Hampopo() {
       <div className="hampopo-container">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          ref={leftRef}
           src="/hampopo.png"
           alt="Hampopo"
-          className="hampopo"
-          style={{ width: "56px", height: "auto", transition: "transform 0.08s ease-out" }}
+          className={`hampopo ${isPlaying ? "hampopo-beat-left" : ""}`}
+          style={{ width: "56px", height: "auto" }}
         />
-        {showStars && (
-          <div ref={starsLeftRef}>
+        {isPlaying && (
+          <>
             <span className="hampopo-star">{"✦"}</span>
             <span className="hampopo-star">{"★"}</span>
             <span className="hampopo-star">{"✧"}</span>
             <span className="hampopo-star">{"❤"}</span>
             <span className="hampopo-star">{"✦"}</span>
             <span className="hampopo-star">{"★"}</span>
-          </div>
+          </>
         )}
       </div>
 
@@ -91,21 +55,20 @@ export default function Hampopo() {
       <div className="hampopo-container">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          ref={rightRef}
           src="/hampopo.png"
           alt="Hampopo"
-          className="hampopo"
-          style={{ width: "56px", height: "auto", transform: "scaleX(-1)", transition: "transform 0.08s ease-out" }}
+          className={`hampopo ${isPlaying ? "hampopo-beat-right" : ""}`}
+          style={{ width: "56px", height: "auto", transform: isPlaying ? undefined : "scaleX(-1)" }}
         />
-        {showStars && (
-          <div ref={starsRightRef}>
+        {isPlaying && (
+          <>
             <span className="hampopo-star">{"✦"}</span>
             <span className="hampopo-star">{"★"}</span>
             <span className="hampopo-star">{"✧"}</span>
             <span className="hampopo-star">{"❤"}</span>
             <span className="hampopo-star">{"✦"}</span>
             <span className="hampopo-star">{"★"}</span>
-          </div>
+          </>
         )}
       </div>
     </div>
