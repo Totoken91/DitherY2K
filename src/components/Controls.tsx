@@ -38,77 +38,117 @@ export default function Controls({
   };
 
   return (
-    <div className="sidebar-section">
-      <div
-        className="sidebar-title"
-        style={{ fontSize: "20px", color: "#ff00ff", marginBottom: "14px" }}
-      >
-        {"~ CONTROLS ~"}
+    <div className="controls-panel" style={{ marginTop: "4px" }}>
+      <div className="controls-title" style={{ color: "#ff00ff" }}>
+        {"✧ ~~ DiThEr SeTtInGs ~~ ✧"}
       </div>
 
-      {/* Algorithm */}
-      <div style={{ marginBottom: "12px" }}>
-        <label
-          style={{
-            display: "block",
-            color: "#00ff00",
-            fontSize: "13px",
-            marginBottom: "3px",
-            textShadow: "1px 1px 0 #000",
-          }}
-        >
-          {">> "}Algorithm:
-        </label>
-        <select
-          value={values.algorithm}
-          onChange={(e) => set("algorithm", e.target.value as DitherAlgorithm)}
-          className="select-retro"
-        >
-          <option value="floyd-steinberg">Floyd-Steinberg</option>
-          <option value="atkinson">Atkinson (Mac)</option>
-          <option value="ordered">Ordered / Bayer 8x8</option>
-          <option value="threshold">Threshold</option>
-        </select>
-      </div>
-
-      {/* Colors */}
-      <div style={{ marginBottom: "12px" }}>
-        <label
-          style={{
-            display: "block",
-            color: "#00ff00",
-            fontSize: "13px",
-            marginBottom: "3px",
-            textShadow: "1px 1px 0 #000",
-          }}
-        >
-          {">> "}Colors:{" "}
-          <span style={{ color: "#ffff00" }}>{values.colorCount}</span>
-        </label>
-        <input
-          type="range"
-          min={2}
-          max={64}
-          value={values.colorCount}
-          onChange={(e) => set("colorCount", Number(e.target.value))}
-          style={{ width: "100%", cursor: "pointer" }}
-        />
-      </div>
-
-      {/* Threshold (only visible for threshold algo) */}
-      {values.algorithm === "threshold" && (
-        <div style={{ marginBottom: "12px" }}>
-          <label
-            style={{
-              display: "block",
-              color: "#00ff00",
-              fontSize: "13px",
-              marginBottom: "3px",
-              textShadow: "1px 1px 0 #000",
-            }}
+      {/* Two-column grid for controls */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px" }}>
+        {/* Algorithm */}
+        <div className="control-row">
+          <label className="control-label">{">> "}Algorithm:</label>
+          <select
+            value={values.algorithm}
+            onChange={(e) => set("algorithm", e.target.value as DitherAlgorithm)}
+            className="select-retro"
           >
-            {">> "}Threshold:{" "}
-            <span style={{ color: "#ffff00" }}>{values.threshold}</span>
+            <option value="floyd-steinberg">Floyd-Steinberg</option>
+            <option value="atkinson">Atkinson (Mac)</option>
+            <option value="ordered">Ordered / Bayer 8x8</option>
+            <option value="threshold">Threshold</option>
+          </select>
+        </div>
+
+        {/* Colors */}
+        <div className="control-row">
+          <label className="control-label">
+            {">> "}Colors: <span style={{ color: "#ffff00" }}>{values.colorCount}</span>
+          </label>
+          <input
+            type="range"
+            min={2}
+            max={64}
+            value={values.colorCount}
+            onChange={(e) => set("colorCount", Number(e.target.value))}
+            style={{ width: "100%", cursor: "pointer" }}
+          />
+        </div>
+
+        {/* Resolution */}
+        <div className="control-row">
+          <label className="control-label">{">> "}Resolution:</label>
+          <select
+            value={values.resolution}
+            onChange={(e) => set("resolution", e.target.value as ResolutionPreset)}
+            className="select-retro"
+          >
+            {Object.entries(RESOLUTION_PRESETS).map(([key, preset]) => (
+              <option key={key} value={key}>{preset.label}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Upscale */}
+        <div className="control-row">
+          <label className="control-label" style={{ cursor: "pointer" }}>
+            <input
+              type="checkbox"
+              checked={values.upscaleEnabled}
+              onChange={(e) => set("upscaleEnabled", e.target.checked)}
+              style={{ marginRight: "4px" }}
+            />
+            Upscale NN
+          </label>
+          {values.upscaleEnabled && (
+            <select
+              value={values.upscaleFactor}
+              onChange={(e) => set("upscaleFactor", Number(e.target.value))}
+              className="select-retro"
+            >
+              <option value={2}>2x</option>
+              <option value={3}>3x</option>
+              <option value={4}>4x</option>
+            </select>
+          )}
+        </div>
+
+        {/* Brightness */}
+        <div className="control-row">
+          <label className="control-label" style={{ color: "#00ffff" }}>
+            Brightness: <span style={{ color: "#ffff00" }}>{values.brightness}</span>
+          </label>
+          <input
+            type="range"
+            min={-100}
+            max={100}
+            value={values.brightness}
+            onChange={(e) => set("brightness", Number(e.target.value))}
+            style={{ width: "100%", cursor: "pointer" }}
+          />
+        </div>
+
+        {/* Contrast */}
+        <div className="control-row">
+          <label className="control-label" style={{ color: "#00ffff" }}>
+            Contrast: <span style={{ color: "#ffff00" }}>{values.contrast}</span>
+          </label>
+          <input
+            type="range"
+            min={-100}
+            max={100}
+            value={values.contrast}
+            onChange={(e) => set("contrast", Number(e.target.value))}
+            style={{ width: "100%", cursor: "pointer" }}
+          />
+        </div>
+      </div>
+
+      {/* Threshold (full width, only for threshold algo) */}
+      {values.algorithm === "threshold" && (
+        <div className="control-row" style={{ marginTop: "4px" }}>
+          <label className="control-label">
+            {">> "}Threshold: <span style={{ color: "#ffff00" }}>{values.threshold}</span>
           </label>
           <input
             type="range"
@@ -121,132 +161,25 @@ export default function Controls({
         </div>
       )}
 
-      {/* Resolution */}
-      <div style={{ marginBottom: "12px" }}>
-        <label
-          style={{
-            display: "block",
-            color: "#00ff00",
-            fontSize: "13px",
-            marginBottom: "3px",
-            textShadow: "1px 1px 0 #000",
-          }}
-        >
-          {">> "}Resolution:
-        </label>
-        <select
-          value={values.resolution}
-          onChange={(e) =>
-            set("resolution", e.target.value as ResolutionPreset)
-          }
-          className="select-retro"
-        >
-          {Object.entries(RESOLUTION_PRESETS).map(([key, preset]) => (
-            <option key={key} value={key}>
-              {preset.label}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Upscale */}
-      <div style={{ marginBottom: "12px" }}>
-        <label
-          style={{
-            display: "block",
-            color: "#00ff00",
-            fontSize: "13px",
-            textShadow: "1px 1px 0 #000",
-            cursor: "pointer",
-          }}
-        >
-          <input
-            type="checkbox"
-            checked={values.upscaleEnabled}
-            onChange={(e) => set("upscaleEnabled", e.target.checked)}
-            style={{ marginRight: "6px" }}
-          />
-          Upscale NN
-        </label>
-        {values.upscaleEnabled && (
-          <select
-            value={values.upscaleFactor}
-            onChange={(e) => set("upscaleFactor", Number(e.target.value))}
-            className="select-retro"
-            style={{ marginTop: "4px" }}
-          >
-            <option value={2}>2x</option>
-            <option value={3}>3x</option>
-            <option value={4}>4x</option>
-          </select>
-        )}
-      </div>
-
       <hr className="rainbow-hr" />
 
-      {/* Brightness */}
-      <div style={{ marginBottom: "12px" }}>
-        <label
-          style={{
-            display: "block",
-            color: "#00ffff",
-            fontSize: "13px",
-            marginBottom: "3px",
-            textShadow: "1px 1px 0 #000",
-          }}
-        >
-          Brightness:{" "}
-          <span style={{ color: "#ffff00" }}>{values.brightness}</span>
-        </label>
-        <input
-          type="range"
-          min={-100}
-          max={100}
-          value={values.brightness}
-          onChange={(e) => set("brightness", Number(e.target.value))}
-          style={{ width: "100%", cursor: "pointer" }}
-        />
-      </div>
-
-      {/* Contrast */}
-      <div style={{ marginBottom: "12px" }}>
-        <label
-          style={{
-            display: "block",
-            color: "#00ffff",
-            fontSize: "13px",
-            marginBottom: "3px",
-            textShadow: "1px 1px 0 #000",
-          }}
-        >
-          Contrast:{" "}
-          <span style={{ color: "#ffff00" }}>{values.contrast}</span>
-        </label>
-        <input
-          type="range"
-          min={-100}
-          max={100}
-          value={values.contrast}
-          onChange={(e) => set("contrast", Number(e.target.value))}
-          style={{ width: "100%", cursor: "pointer" }}
-        />
-      </div>
-
-      {/* Download */}
+      {/* Download button — BIG and VISIBLE */}
       <button
-        className="btn-retro"
+        className="btn-download"
         onClick={onDownload}
         disabled={!hasImage}
-        style={{
-          width: "100%",
-          fontSize: "16px",
-          fontWeight: "bold",
-          padding: "10px",
-          marginTop: "4px",
-        }}
       >
-        {"⬇ DOWNLOAD PNG ⬇"}
+        {"⬇ DOWNLOAD YOUR DITHERED IMAGE ⬇"}
       </button>
+      <div style={{
+        textAlign: "center",
+        color: "#808080",
+        fontSize: "9px",
+        marginTop: "3px",
+        fontFamily: "'Comic Sans MS', cursive",
+      }}>
+        {"Right-click > Save As for MAXIMUM quality!!!"}
+      </div>
     </div>
   );
 }

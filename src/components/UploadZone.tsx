@@ -41,7 +41,6 @@ export default function UploadZone({ onImageLoaded }: UploadZoneProps) {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (file) handleFile(file);
-      // Reset so re-uploading the same file triggers onChange again
       e.target.value = "";
     },
     [handleFile]
@@ -53,13 +52,12 @@ export default function UploadZone({ onImageLoaded }: UploadZoneProps) {
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
       onClick={() => inputRef.current?.click()}
+      className={`marching-ants ${dragging ? "marching-ants-active" : ""}`}
       style={{
-        border: dragging ? "3px dashed #00FF00" : "3px dashed #FFFF00",
-        padding: "24px 16px",
+        padding: "18px 12px",
         textAlign: "center",
-        background: dragging ? "rgba(0,255,0,0.1)" : "rgba(0,0,0,0.3)",
+        background: dragging ? "rgba(0,255,0,0.08)" : "rgba(0,0,0,0.4)",
         cursor: "pointer",
-        transition: "border-color 0.2s",
       }}
     >
       <input
@@ -70,23 +68,18 @@ export default function UploadZone({ onImageLoaded }: UploadZoneProps) {
         style={{ display: "none" }}
       />
       <div
+        className="pulse"
         style={{
-          fontSize: "24px",
+          fontSize: "20px",
           color: "#ffff00",
           fontFamily: "Impact, sans-serif",
           textShadow: "2px 2px 0 #000",
-          marginBottom: "6px",
+          marginBottom: "4px",
         }}
       >
         {">> "}Drop your image here!!{" <<"}
       </div>
-      <div
-        style={{
-          color: "#00ffff",
-          fontSize: "13px",
-          fontFamily: "'Comic Sans MS', cursive",
-        }}
-      >
+      <div style={{ color: "#00ffff", fontSize: "11px", fontFamily: "'Comic Sans MS', cursive" }}>
         ...or click to browse (JPG, PNG, WebP)
       </div>
     </div>
