@@ -29,9 +29,26 @@ export default function WebampPlayer() {
         zIndex: 1000,
       });
 
-      // Let Webamp render normally on the body
       await webamp.renderWhenReady(document.body);
       webampRef.current = webamp;
+
+      // Fix: Webamp's container takes up the full page by default.
+      // Force it to be a fixed overlay that doesn't interfere with layout.
+      const webampEl = document.getElementById("webamp");
+      if (webampEl) {
+        webampEl.style.position = "fixed";
+        webampEl.style.top = "0";
+        webampEl.style.left = "0";
+        webampEl.style.width = "0";
+        webampEl.style.height = "0";
+        webampEl.style.overflow = "visible";
+        webampEl.style.pointerEvents = "none";
+        // Re-enable pointer events on the actual windows inside
+        const children = webampEl.querySelectorAll<HTMLElement>(":scope > div");
+        children.forEach((child) => {
+          child.style.pointerEvents = "auto";
+        });
+      }
     };
 
     initWebamp();
@@ -43,6 +60,5 @@ export default function WebampPlayer() {
     };
   }, []);
 
-  // This component renders nothing — Webamp manages its own DOM
   return null;
 }
