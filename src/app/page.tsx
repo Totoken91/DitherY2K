@@ -23,19 +23,19 @@ const DEFAULT_CONTROLS: ControlValues = {
 
 const BADGES = [
   { src: "https://cyber.dabamos.de/88x31/netscape.gif", alt: "Netscape Now" },
-  { src: "https://cyber.dabamos.de/88x31/ie_logo.gif", alt: "Internet Explorer" },
   { src: "https://cyber.dabamos.de/88x31/html.gif", alt: "HTML" },
   { src: "https://cyber.dabamos.de/88x31/notepad.gif", alt: "Made with Notepad" },
-  { src: "https://cyber.dabamos.de/88x31/www.gif", alt: "World Wide Web" },
   { src: "https://cyber.dabamos.de/88x31/javascript.gif", alt: "JavaScript" },
   { src: "https://cyber.dabamos.de/88x31/css.gif", alt: "CSS" },
   { src: "https://cyber.dabamos.de/88x31/fire.gif", alt: "Fire" },
+  { src: "https://cyber.dabamos.de/88x31/anybrow3.gif", alt: "Any Browser" },
+  { src: "https://cyber.dabamos.de/88x31/powered.gif", alt: "Powered By" },
 ];
 
 const AWARDS = [
-  { src: "https://cyber.dabamos.de/88x31/bestview.gif", alt: "Best Viewed With Eyes" },
-  { src: "https://cyber.dabamos.de/88x31/nocopyright.gif", alt: "No Copyright" },
-  { src: "https://cyber.dabamos.de/88x31/built.gif", alt: "Built to Last" },
+  { src: "https://cyber.dabamos.de/88x31/cool.gif", alt: "Cool Site" },
+  { src: "https://cyber.dabamos.de/88x31/geocities.gif", alt: "GeoCities" },
+  { src: "https://cyber.dabamos.de/88x31/valid_html.gif", alt: "Valid HTML" },
 ];
 
 const VISITOR_NUMBER = "00048731";
@@ -145,12 +145,12 @@ export default function Home() {
 
         <div style={{ display: "flex", justifyContent: "center", gap: "8px", alignItems: "center", margin: "6px 0" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/gifs/under-construction.png" alt="Under Construction" className="sparkle" style={{ height: "20px", imageRendering: "pixelated" }} />
+          <img src="https://textfiles.com/underconstruction/HesijeLing5049construction.gif" alt="Under Construction" className="sparkle" style={{ height: "20px", imageRendering: "pixelated" }} />
           <span className="fire-text" style={{ fontFamily: "Impact, sans-serif", fontSize: "12px" }}>
             {"⚠️ UNDER CONSTRUCTION ⚠️"}
           </span>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/gifs/under-construction.png" alt="Under Construction" className="sparkle" style={{ height: "20px", imageRendering: "pixelated" }} />
+          <img src="https://textfiles.com/underconstruction/HesijeLing5049construction.gif" alt="Under Construction" className="sparkle" style={{ height: "20px", imageRendering: "pixelated" }} />
         </div>
 
         <div className="gif-divider">
@@ -224,7 +224,7 @@ export default function Home() {
           {/* Under Construction */}
           <div className="sidebar-section" style={{ textAlign: "center" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/gifs/under-construction2.png" alt="Under Construction" style={{ imageRendering: "pixelated" }} />
+            <img src="https://textfiles.com/underconstruction/CosijeLing5012construction.gif" alt="Under Construction" style={{ imageRendering: "pixelated", maxWidth: "100%" }} />
             <div style={{ color: "#ff0000", fontSize: "10px" }}>More features soon!!!</div>
           </div>
 
