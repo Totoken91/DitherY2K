@@ -172,13 +172,11 @@ export default function Home() {
         </div>
 
         <div style={{ display: "flex", justifyContent: "center", gap: "8px", alignItems: "center", margin: "6px 0" }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="https://textfiles.com/underconstruction/HesijeLing5049construction.gif" alt="Under Construction" className="sparkle" style={{ height: "20px", imageRendering: "pixelated" }} />
-          <span className="fire-text" style={{ fontFamily: "Impact, sans-serif", fontSize: "12px" }}>
-            {"⚠️ UNDER CONSTRUCTION ⚠️"}
+          <span className="blink" style={{ color: "#ff0000", fontSize: "14px" }}>{"⚠️"}</span>
+          <span className="rainbow-text" style={{ fontFamily: "Impact, sans-serif", fontSize: "14px" }}>
+            {"WARNING : EXTREMELY COOL"}
           </span>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="https://textfiles.com/underconstruction/HesijeLing5049construction.gif" alt="Under Construction" className="sparkle" style={{ height: "20px", imageRendering: "pixelated" }} />
+          <span className="blink" style={{ color: "#ff0000", fontSize: "14px" }}>{"⚠️"}</span>
         </div>
 
         <div className="gif-divider">
@@ -249,11 +247,11 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Under Construction */}
+          {/* Extremely Cool */}
           <div className="sidebar-section" style={{ textAlign: "center" }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="https://textfiles.com/underconstruction/CosijeLing5012construction.gif" alt="Under Construction" style={{ imageRendering: "pixelated", maxWidth: "100%" }} />
-            <div style={{ color: "#ff0000", fontSize: "10px" }}>More features soon!!!</div>
+            <div className="blink" style={{ color: "#ff0000", fontSize: "11px", fontWeight: "bold" }}>{"⚠️ WARNING ⚠️"}</div>
+            <div className="rainbow-text" style={{ fontSize: "12px", fontFamily: "Impact, sans-serif", margin: "2px 0" }}>EXTREMELY COOL</div>
+            <div style={{ color: "#ffff00", fontSize: "10px" }}>More features soon!!!</div>
           </div>
 
           {/* Awards */}
