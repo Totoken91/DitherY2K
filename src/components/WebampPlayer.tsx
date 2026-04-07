@@ -3,11 +3,12 @@
 import { useEffect, useRef } from "react";
 
 export default function WebampPlayer() {
+  const containerRef = useRef<HTMLDivElement>(null);
   const initedRef = useRef(false);
   const webampRef = useRef<unknown>(null);
 
   useEffect(() => {
-    if (initedRef.current) return;
+    if (initedRef.current || !containerRef.current) return;
     initedRef.current = true;
 
     const initWebamp = async () => {
@@ -29,9 +30,7 @@ export default function WebampPlayer() {
         zIndex: 1000,
       });
 
-      // Webamp renders #webamp on document.body — CSS in globals.css
-      // overrides its positioning so it doesn't cover the page.
-      await webamp.renderWhenReady(document.body);
+      await webamp.renderWhenReady(containerRef.current!);
       webampRef.current = webamp;
     };
 
@@ -44,5 +43,5 @@ export default function WebampPlayer() {
     };
   }, []);
 
-  return null;
+  return <div ref={containerRef} id="webamp-container" />;
 }
