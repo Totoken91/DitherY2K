@@ -50,19 +50,15 @@ export default function UploadZone({ onImageLoaded }: UploadZoneProps) {
       onDrop={onDrop}
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
+      onClick={() => inputRef.current?.click()}
       style={{
         border: dragging ? "3px dashed #00FF00" : "3px dashed #FFFF00",
-        borderRadius: 0,
-        padding: "30px 20px",
+        padding: "24px 16px",
         textAlign: "center",
         background: dragging ? "rgba(0,255,0,0.1)" : "rgba(0,0,0,0.3)",
         cursor: "pointer",
-        fontFamily: "'Comic Sans MS', cursive",
-        color: "#FFFF00",
-        fontSize: "16px",
         transition: "border-color 0.2s",
       }}
-      onClick={() => inputRef.current?.click()}
     >
       <input
         ref={inputRef}
@@ -71,10 +67,24 @@ export default function UploadZone({ onImageLoaded }: UploadZoneProps) {
         onChange={onChange}
         style={{ display: "none" }}
       />
-      <div style={{ fontSize: "32px", marginBottom: "8px" }}>
+      <div
+        style={{
+          fontSize: "24px",
+          color: "#ffff00",
+          fontFamily: "Impact, sans-serif",
+          textShadow: "2px 2px 0 #000",
+          marginBottom: "6px",
+        }}
+      >
         {">> "}Drop your image here!!{" <<"}
       </div>
-      <div style={{ color: "#00FFFF" }}>
+      <div
+        style={{
+          color: "#00ffff",
+          fontSize: "13px",
+          fontFamily: "'Comic Sans MS', cursive",
+        }}
+      >
         ...or click to browse (JPG, PNG, WebP)
       </div>
     </div>

@@ -8,34 +8,6 @@ interface PreviewProps {
   isProcessing: boolean;
 }
 
-const panelLabelStyle: React.CSSProperties = {
-  textAlign: "center",
-  fontFamily: "Impact, sans-serif",
-  fontSize: "16px",
-  color: "#00FFFF",
-  textShadow: "1px 1px 0 #000",
-  marginBottom: "4px",
-};
-
-const panelStyle: React.CSSProperties = {
-  flex: 1,
-  minWidth: 0,
-  border: "3px inset #808080",
-  background: "#000",
-  padding: "4px",
-  position: "relative",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-};
-
-const canvasStyle: React.CSSProperties = {
-  maxWidth: "100%",
-  maxHeight: "400px",
-  imageRendering: "pixelated",
-  display: "block",
-};
-
 export default function Preview({
   originalImage,
   resultCanvas,
@@ -44,7 +16,6 @@ export default function Preview({
   const originalCanvasRef = useRef<HTMLCanvasElement>(null);
   const resultCanvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Draw original image onto canvas
   useEffect(() => {
     if (!originalImage || !originalCanvasRef.current) return;
     const canvas = originalCanvasRef.current;
@@ -54,7 +25,6 @@ export default function Preview({
     ctx.drawImage(originalImage, 0, 0);
   }, [originalImage]);
 
-  // Draw result onto canvas
   useEffect(() => {
     if (!resultCanvas || !resultCanvasRef.current) return;
     const canvas = resultCanvasRef.current;
@@ -70,19 +40,66 @@ export default function Preview({
     <div
       style={{
         display: "flex",
-        gap: "12px",
+        gap: "8px",
         flexWrap: "wrap",
       }}
     >
       {/* Original */}
-      <div style={panelStyle}>
-        <div style={panelLabelStyle}>~ ORIGINAL ~</div>
-        <canvas ref={originalCanvasRef} style={canvasStyle} />
+      <div
+        className="panel-sunken"
+        style={{
+          flex: 1,
+          minWidth: 0,
+          padding: "6px",
+          position: "relative",
+        }}
+      >
+        <div
+          style={{
+            textAlign: "center",
+            fontFamily: "Impact, sans-serif",
+            fontSize: "15px",
+            color: "#00ffff",
+            textShadow: "1px 1px 0 #000",
+            marginBottom: "4px",
+          }}
+        >
+          {"~ ORIGINAL ~"}
+        </div>
+        <canvas
+          ref={originalCanvasRef}
+          style={{
+            maxWidth: "100%",
+            maxHeight: "400px",
+            imageRendering: "pixelated",
+            display: "block",
+            margin: "0 auto",
+          }}
+        />
       </div>
 
       {/* Result */}
-      <div style={panelStyle}>
-        <div style={panelLabelStyle}>~ DITHERED ~</div>
+      <div
+        className="panel-sunken"
+        style={{
+          flex: 1,
+          minWidth: 0,
+          padding: "6px",
+          position: "relative",
+        }}
+      >
+        <div
+          style={{
+            textAlign: "center",
+            fontFamily: "Impact, sans-serif",
+            fontSize: "15px",
+            color: "#00ffff",
+            textShadow: "1px 1px 0 #000",
+            marginBottom: "4px",
+          }}
+        >
+          {"~ DITHERED ~"}
+        </div>
         {isProcessing && (
           <div
             style={{
@@ -99,7 +116,11 @@ export default function Preview({
         <canvas
           ref={resultCanvasRef}
           style={{
-            ...canvasStyle,
+            maxWidth: "100%",
+            maxHeight: "400px",
+            imageRendering: "pixelated",
+            display: "block",
+            margin: "0 auto",
             opacity: isProcessing ? 0.4 : 1,
             transition: "opacity 0.2s",
           }}

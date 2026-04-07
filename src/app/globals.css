@@ -1,9 +1,15 @@
+/* =============================================================
+   DitherY2K — GeoCities / Neocities circa 1999-2003
+   ============================================================= */
+
+/* --- Reset --- */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+/* --- Starfield background (CSS generated pixel pattern) --- */
 html,
 body {
   height: 100%;
@@ -14,23 +20,267 @@ body {
 body {
   font-family: "Comic Sans MS", "Comic Sans", cursive, sans-serif;
   color: #00ff00;
-  background-color: #000080;
+  background-color: #000033;
+  background-image:
+    radial-gradient(1px 1px at 10% 15%, #ffffff 50%, transparent 100%),
+    radial-gradient(1px 1px at 25% 35%, #ffffcc 50%, transparent 100%),
+    radial-gradient(1px 1px at 50% 10%, #ffffff 50%, transparent 100%),
+    radial-gradient(1px 1px at 70% 60%, #ccccff 50%, transparent 100%),
+    radial-gradient(1px 1px at 85% 25%, #ffffff 50%, transparent 100%),
+    radial-gradient(1px 1px at 15% 75%, #ffffcc 50%, transparent 100%),
+    radial-gradient(1px 1px at 40% 80%, #ffffff 50%, transparent 100%),
+    radial-gradient(1px 1px at 60% 45%, #ccccff 50%, transparent 100%),
+    radial-gradient(1px 1px at 90% 85%, #ffffff 50%, transparent 100%),
+    radial-gradient(1px 1px at 5% 50%, #ffffcc 50%, transparent 100%),
+    radial-gradient(1px 1px at 35% 55%, #ffffff 50%, transparent 100%),
+    radial-gradient(1px 1px at 75% 90%, #ccccff 50%, transparent 100%),
+    radial-gradient(1px 1px at 55% 30%, #ffffff 50%, transparent 100%),
+    radial-gradient(1px 1px at 20% 95%, #ffffcc 50%, transparent 100%),
+    radial-gradient(1px 1px at 95% 5%, #ffffff 50%, transparent 100%);
+  background-size: 200px 200px;
 }
 
+/* --- Links --- */
 a {
   color: #0000ff;
+  text-decoration: underline;
 }
-
 a:visited {
   color: #800080;
 }
+a:hover {
+  color: #ff00ff;
+}
 
-/* Retro loading spinner */
+/* --- WordArt Title --- */
+.wordart {
+  font-family: "Impact", "Arial Black", sans-serif;
+  font-size: 56px;
+  font-weight: bold;
+  font-style: italic;
+  background: linear-gradient(183deg, #ff00ff 0%, #6000ca 30%, #00ffff 70%, #ff6600 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow: 4px 4px 0px #000, -1px -1px 0 #000;
+  transform: skewY(-3deg);
+  display: inline-block;
+  letter-spacing: 2px;
+  filter: drop-shadow(3px 3px 0 #000);
+  line-height: 1.1;
+}
+
+.wordart-subtitle {
+  font-family: "Comic Sans MS", cursive;
+  color: #ffff00;
+  font-size: 18px;
+  font-style: italic;
+  text-shadow: 2px 2px 0 #000;
+}
+
+/* --- Marquee --- */
+.marquee {
+  overflow: hidden;
+  white-space: nowrap;
+  background: linear-gradient(90deg, #ff0000, #ff6600, #ffff00, #00ff00, #0000ff, #8b00ff);
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 14px;
+  padding: 4px 0;
+  font-family: "Comic Sans MS", cursive;
+  text-shadow: 1px 1px 0 #000;
+  border-top: 2px solid #fff;
+  border-bottom: 2px solid #000;
+}
+
+.marquee span {
+  display: inline-block;
+  padding-left: 100%;
+  animation: marquee-scroll 18s linear infinite;
+}
+
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+/* --- Blink --- */
+.blink {
+  animation: blink-anim 1s step-end infinite;
+}
+
+@keyframes blink-anim {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* --- Win95 Button --- */
+.btn-retro {
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #000;
+  border-right: 2px solid #000;
+  background: #c0c0c0;
+  font-family: "Comic Sans MS", cursive;
+  cursor: pointer;
+  padding: 6px 14px;
+  font-size: 14px;
+  color: #000;
+}
+
+.btn-retro:active {
+  border-top: 2px solid #000;
+  border-left: 2px solid #000;
+  border-bottom: 2px solid #fff;
+  border-right: 2px solid #fff;
+}
+
+.btn-retro:disabled {
+  color: #808080;
+  cursor: not-allowed;
+}
+
+/* --- Win95 Panel --- */
+.panel-raised {
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #000;
+  border-right: 2px solid #000;
+  background: #c0c0c0;
+}
+
+.panel-sunken {
+  border-top: 2px solid #000;
+  border-left: 2px solid #000;
+  border-bottom: 2px solid #fff;
+  border-right: 2px solid #fff;
+  background: #000;
+}
+
+/* --- Table-style layout (GeoCities feel) --- */
+.geo-table {
+  display: table;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 8px;
+}
+
+.geo-sidebar {
+  display: table-cell;
+  width: 200px;
+  vertical-align: top;
+}
+
+.geo-main {
+  display: table-cell;
+  vertical-align: top;
+}
+
+/* --- Sidebar section --- */
+.sidebar-section {
+  border: 3px ridge #808080;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.sidebar-title {
+  font-family: Impact, sans-serif;
+  color: #ff00ff;
+  font-size: 16px;
+  text-shadow: 1px 1px 0 #000;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.sidebar-link {
+  display: block;
+  color: #00ffff;
+  font-size: 13px;
+  padding: 2px 0;
+  text-decoration: none;
+}
+
+.sidebar-link:hover {
+  color: #ffff00;
+  text-decoration: underline;
+}
+
+.sidebar-text {
+  color: #ffffff;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* --- Badge 88x31 --- */
+.badge-88x31 {
+  width: 88px;
+  height: 31px;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+  display: inline-block;
+  image-rendering: pixelated;
+}
+
+/* --- Rainbow HR --- */
+.rainbow-hr {
+  border: none;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    #ff0000,
+    #ff6600,
+    #ffff00,
+    #00ff00,
+    #0000ff,
+    #8b00ff,
+    #ff0000
+  );
+  margin: 12px 0;
+}
+
+/* --- Visitor counter --- */
+.visitor-counter {
+  display: inline-block;
+  background: #000;
+  border: 2px inset #808080;
+  padding: 3px 8px;
+  font-family: "Courier New", monospace;
+  font-size: 16px;
+  color: #00ff00;
+  letter-spacing: 2px;
+}
+
+/* --- Footer --- */
+.geo-footer {
+  text-align: center;
+  padding: 16px;
+  border-top: 3px groove #808080;
+  background: rgba(0, 0, 0, 0.4);
+  margin-top: 12px;
+}
+
+/* --- Header zone --- */
+.geo-header {
+  text-align: center;
+  padding: 16px 12px;
+  border-bottom: 3px groove #808080;
+  background: rgba(51, 0, 102, 0.5);
+}
+
+/* --- Retro loading spinner --- */
 .retro-spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid #00FF00;
-  border-top-color: #FF00FF;
+  border: 4px solid #00ff00;
+  border-top-color: #ff00ff;
   border-radius: 0;
   animation: retro-spin 0.6s linear infinite;
 }
@@ -38,5 +288,40 @@ a:visited {
 @keyframes retro-spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* --- Slight rotate decoration --- */
+.tilt-left {
+  transform: rotate(-2deg);
+}
+
+.tilt-right {
+  transform: rotate(2deg);
+}
+
+/* --- Select (Win95 style) --- */
+.select-retro {
+  width: 100%;
+  padding: 4px;
+  font-family: "Comic Sans MS", cursive;
+  font-size: 13px;
+  background: #c0c0c0;
+  border-top: 2px solid #000;
+  border-left: 2px solid #000;
+  border-bottom: 2px solid #fff;
+  border-right: 2px solid #fff;
+  cursor: pointer;
+}
+
+/* --- Responsive: stack on small screens --- */
+@media (max-width: 700px) {
+  .geo-table {
+    display: block;
+  }
+  .geo-sidebar,
+  .geo-main {
+    display: block;
+    width: 100%;
   }
 }
