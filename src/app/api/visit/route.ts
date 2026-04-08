@@ -21,25 +21,20 @@ function isBot(req: NextRequest): boolean {
 // GET: return current count
 export async function GET() {
   if (!redis) {
-    return Response.json({ count: 48731 }); // fallback
+    return Response.json({ count: 0 });
   }
-  const count = (await redis.get<number>("visitor_count")) ?? 48731;
+  const count = (await redis.get<number>("visitor_count")) ?? 0;
   return Response.json({ count });
 }
 
 // POST: increment counter (if not a bot)
 export async function POST(req: NextRequest) {
   if (!redis) {
-    return Response.json({ count: 48731 });
+    return Response.json({ count: 0 });
   }
   if (isBot(req)) {
-    const count = (await redis.get<number>("visitor_count")) ?? 48731;
+    const count = (await redis.get<number>("visitor_count")) ?? 0;
     return Response.json({ count, filtered: true });
-  }
-  // Initialize counter at 48731 if it doesn't exist yet
-  const exists = await redis.exists("visitor_count");
-  if (!exists) {
-    await redis.set("visitor_count", 48731);
   }
   const count = await redis.incr("visitor_count");
   return Response.json({ count });
