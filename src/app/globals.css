@@ -856,10 +856,4 @@ button:active, .btn-retro:active, .btn-download:active {
     margin-bottom: 3px;
   }
 
-  /* Party lights: less intense on mobile */
-  .spotlight {
-    width: 150px;
-    height: 150px;
-    opacity: 0.1;
-  }
 }
