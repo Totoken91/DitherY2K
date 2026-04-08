@@ -759,6 +759,21 @@ button:active, .btn-retro:active, .btn-download:active {
   flex-wrap: wrap;
 }
 
+/* --- Party Mode button shine --- */
+.btn-party-mode {
+  background: linear-gradient(135deg, #c0c0c0 0%, #e0e0e0 40%, #ffffff 50%, #e0e0e0 60%, #c0c0c0 100%);
+  background-size: 200% 200%;
+  animation: party-shine 2s ease-in-out infinite;
+  box-shadow: 0 0 8px rgba(255, 0, 255, 0.4), 0 0 16px rgba(0, 255, 255, 0.2);
+}
+.btn-party-mode:hover {
+  box-shadow: 0 0 12px rgba(255, 0, 255, 0.7), 0 0 24px rgba(0, 255, 255, 0.4) !important;
+}
+@keyframes party-shine {
+  0%, 100% { background-position: 200% 200%; }
+  50% { background-position: 0% 0%; }
+}
+
 /* --- Responsive --- */
 @media (max-width: 700px) {
   /* Stack sidebar below main content */

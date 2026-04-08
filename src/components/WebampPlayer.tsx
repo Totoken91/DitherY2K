@@ -86,9 +86,9 @@ export default function WebampPlayer() {
     <>
       {!visible && (
         <button
-          className="btn-retro"
+          className="btn-retro btn-party-mode"
           onClick={() => setVisible(true)}
-          style={{ position: "fixed", bottom: "10px", left: "10px", zIndex: 999, fontSize: "12px", padding: "4px 10px" }}
+          style={{ position: "fixed", bottom: "10px", left: "10px", zIndex: 999, fontSize: "13px", padding: "6px 14px", fontWeight: "bold" }}
         >
           {"🎵 Party Mode"}
         </button>
