@@ -21,12 +21,6 @@ export default function WebampPlayer() {
       const Webamp = (await import("webamp")).default;
       if (!Webamp.browserIsSupported()) return;
 
-      // Center the main window on screen
-      const mainW = 275;
-      const mainH = 116;
-      const left = Math.round((window.innerWidth - mainW) / 2);
-      const top = Math.round((window.innerHeight - mainH) / 2 - 50);
-
       const webamp = new Webamp({
         initialTracks: [
           {
@@ -38,15 +32,33 @@ export default function WebampPlayer() {
           url: "https://archive.org/cors/winampskin_Purple_Glow/Purple_Glow.wsz",
         },
         zIndex: 1000,
-        windowLayout: {
-          main: { position: { top, left } },
-          equalizer: { position: { top: top + mainH, left } },
-          playlist: { position: { top: top + mainH + 116, left } },
-        },
       });
 
       await webamp.renderWhenReady(containerRef.current!);
       webampRef.current = webamp;
+
+      // Center all webamp windows on screen after render
+      setTimeout(() => {
+        const webampEl = document.getElementById("webamp");
+        if (!webampEl) return;
+        const windows = webampEl.querySelectorAll<HTMLElement>('[style*="position"]');
+        let totalH = 0;
+        const dims: { el: HTMLElement; h: number }[] = [];
+        windows.forEach((w) => {
+          if (w.offsetWidth > 100) {
+            dims.push({ el: w, h: w.offsetHeight });
+            totalH += w.offsetHeight;
+          }
+        });
+        const startTop = Math.max(20, Math.round((window.innerHeight - totalH) / 2));
+        const left = Math.max(20, Math.round((window.innerWidth - 275) / 2));
+        let currentTop = startTop;
+        dims.forEach(({ el, h }) => {
+          el.style.top = currentTop + "px";
+          el.style.left = left + "px";
+          currentTop += h;
+        });
+      }, 300);
       webamp.play();
       broadcastPlaying(true);
 
