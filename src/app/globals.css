@@ -563,14 +563,17 @@ button:active, .btn-retro:active, .btn-download:active {
   z-index: 1000 !important;
   pointer-events: none !important;
 }
-#webamp-container * {
-  pointer-events: auto !important;
-}
 #webamp {
   position: absolute !important;
   width: 100% !important;
   height: 100% !important;
   overflow: visible !important;
+  pointer-events: none !important;
+}
+/* Only the actual Webamp window panels should be interactive */
+#webamp > div > div {
+  pointer-events: auto !important;
+}
 }
 
 /* --- Hampopo kawaii bounce --- */
