@@ -21,6 +21,12 @@ export default function WebampPlayer() {
       const Webamp = (await import("webamp")).default;
       if (!Webamp.browserIsSupported()) return;
 
+      // Center the main window on screen
+      const mainW = 275;
+      const mainH = 116;
+      const x = Math.round((window.innerWidth - mainW) / 2);
+      const y = Math.round((window.innerHeight - mainH) / 2 - 50);
+
       const webamp = new Webamp({
         initialTracks: [
           {
@@ -32,6 +38,11 @@ export default function WebampPlayer() {
           url: "https://archive.org/cors/winampskin_Purple_Glow/Purple_Glow.wsz",
         },
         zIndex: 1000,
+        windowLayout: {
+          main: { position: { x, y } },
+          equalizer: { position: { x, y: y + mainH } },
+          playlist: { position: { x, y: y + mainH + 116 } },
+        },
       });
 
       await webamp.renderWhenReady(containerRef.current!);
@@ -67,7 +78,7 @@ export default function WebampPlayer() {
           onClick={() => setVisible(true)}
           style={{ position: "fixed", bottom: "10px", left: "10px", zIndex: 999, fontSize: "12px", padding: "4px 10px" }}
         >
-          {"🎵 Open Winamp"}
+          {"🎵 Party Mode"}
         </button>
       )}
       {visible && <div ref={containerRef} id="webamp-container" />}
