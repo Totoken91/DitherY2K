@@ -41,20 +41,20 @@ const DEFAULT_CONTROLS: ControlValues = {
 };
 
 const BADGES = [
-  { src: "https://cyber.dabamos.de/88x31/netscape.gif", alt: "Netscape Now" },
-  { src: "https://cyber.dabamos.de/88x31/ie_anim.gif", alt: "Internet Explorer" },
-  { src: "https://cyber.dabamos.de/88x31/html.gif", alt: "HTML" },
-  { src: "https://cyber.dabamos.de/88x31/notepad.gif", alt: "Made with Notepad" },
-  { src: "https://cyber.dabamos.de/88x31/javascript.gif", alt: "JavaScript" },
-  { src: "https://cyber.dabamos.de/88x31/css.gif", alt: "CSS" },
-  { src: "https://cyber.dabamos.de/88x31/fire.gif", alt: "Fire" },
-  { src: "https://cyber.dabamos.de/88x31/any_browser.gif", alt: "Any Browser" },
-];
-
-const AWARDS = [
-  { src: "https://cyber.dabamos.de/88x31/best_viewed_with_eyes.gif", alt: "Best Viewed With Eyes" },
-  { src: "https://cyber.dabamos.de/88x31/hotaward.gif", alt: "Hot Award" },
-  { src: "https://cyber.dabamos.de/88x31/coolpage.gif", alt: "Cool Page" },
+  { src: "https://capstasher.neocities.org/88x31Buttons/000%20Y2K%20NEOCITIES%20BUTTON%2001.png", alt: "Y2K Neocities" },
+  { src: "https://capstasher.neocities.org/88x31Buttons/angellogo.gif", alt: "Angel" },
+  { src: "https://capstasher.neocities.org/88x31Buttons/ani_face.gif", alt: "Face" },
+  { src: "https://capstasher.neocities.org/88x31Buttons/17.gif", alt: "17" },
+  { src: "https://capstasher.neocities.org/88x31Buttons/128.gif", alt: "128" },
+  { src: "https://capstasher.neocities.org/88x31Buttons/104.gif", alt: "104" },
+  { src: "https://capstasher.neocities.org/88x31Buttons/button.gif", alt: "Button" },
+  { src: "https://capstasher.neocities.org/88x31Buttons/geocites.gif", alt: "GeoCities" },
+  { src: "https://capstasher.neocities.org/88x31Buttons/imissxp.gif", alt: "I Miss XP" },
+  { src: "https://capstasher.neocities.org/88x31Buttons/kanto.gif", alt: "Kanto" },
+  { src: "https://capstasher.neocities.org/88x31Buttons/pizzza.gif", alt: "Pizza" },
+  { src: "https://capstasher.neocities.org/88x31Buttons/rainbowhouselogoanimal.gif", alt: "Rainbow House" },
+  { src: "https://capstasher.neocities.org/88x31Buttons/tumblr_p7th88cRMg1x4py3to1_100.gif", alt: "Tumblr 1" },
+  { src: "https://capstasher.neocities.org/88x31Buttons/tumblr_ptml3xpk7A1xwjivko2_100.gif", alt: "Tumblr 2" },
 ];
 
 // Visitor number is fetched from the API
@@ -260,22 +260,11 @@ export default function Home() {
             <div style={{ color: "#ffff00", fontSize: "10px" }}>More features soon!!!</div>
           </div>
 
-          {/* Awards */}
-          <div className="sidebar-section">
-            <div className="sidebar-title">{"🏆 Awards 🏆"}</div>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "3px", justifyContent: "center" }}>
-              {AWARDS.map((a) => (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img key={a.alt} src={a.src} alt={a.alt} className="badge-88x31" />
-              ))}
-            </div>
-          </div>
-
           {/* Badges */}
           <div className="sidebar-section">
             <div className="sidebar-title">{"☆ Badges ☆"}</div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "3px", justifyContent: "center" }}>
-              {BADGES.slice(0, 4).map((b) => (
+              {BADGES.slice(0, 6).map((b) => (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img key={b.alt} src={b.src} alt={b.alt} className="badge-88x31" />
               ))}
