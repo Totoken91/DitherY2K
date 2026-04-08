@@ -786,7 +786,7 @@ button:active, .btn-retro:active, .btn-download:active {
     width: 100% !important;
   }
 
-  /* Smaller WordArt */
+  /* WordArt */
   .wordart {
     font-size: 28px;
     letter-spacing: 1px;
@@ -795,22 +795,22 @@ button:active, .btn-retro:active, .btn-download:active {
     font-size: 12px;
   }
 
-  /* Hampopo smaller */
+  /* Hampopo bigger on mobile (was too small at 36px) */
   .hampopo {
-    width: 36px !important;
+    width: 48px !important;
   }
 
-  /* Spinning stars smaller */
+  /* Spinning stars */
   .spin-star, .spin-star-reverse {
-    font-size: 16px;
+    font-size: 18px;
   }
 
-  /* Header tighter */
+  /* Header */
   .geo-header {
-    padding: 6px 4px;
+    padding: 8px 4px;
   }
 
-  /* Controls: single column on mobile */
+  /* Controls: single column */
   .controls-grid {
     grid-template-columns: 1fr !important;
   }
@@ -823,35 +823,37 @@ button:active, .btn-retro:active, .btn-download:active {
     min-width: 100% !important;
   }
 
-  /* Visitor counter smaller */
+  /* Visitor counter */
   .visitor-digit {
-    font-size: 12px;
-    min-width: 12px;
+    font-size: 13px;
+    min-width: 13px;
     padding: 1px 2px;
   }
 
-  /* Footer buttons wrap better */
+  /* Footer */
   .geo-footer {
     padding: 6px 4px;
   }
 
-  /* Badge row wraps */
+  /* Badges */
   .badge-88x31 {
     width: 66px;
     height: 23px;
   }
 
-  /* Marquee text smaller */
+  /* Marquee */
   .marquee {
     font-size: 11px;
   }
 
-  /* Party mode button */
-  .btn-retro[style*="position: fixed"] {
-    bottom: 4px !important;
-    left: 4px !important;
-    font-size: 10px !important;
-    padding: 3px 6px !important;
+  /* Party mode button — bigger and more visible on mobile */
+  .btn-party-mode {
+    bottom: 12px !important;
+    left: 50% !important;
+    transform: translateX(-50%);
+    font-size: 14px !important;
+    padding: 8px 20px !important;
+    box-shadow: 0 0 12px rgba(255, 0, 255, 0.6), 0 0 24px rgba(0, 255, 255, 0.3) !important;
   }
 
   /* Controls title */
@@ -865,10 +867,21 @@ button:active, .btn-retro:active, .btn-download:active {
     padding: 8px 10px;
   }
 
-  /* Sidebar sections tighter */
+  /* Sidebar sections */
   .sidebar-section {
     padding: 4px;
     margin-bottom: 3px;
   }
 
+  /* Party lights — MORE visible on mobile, bigger + brighter */
+  .spotlight {
+    width: 400px;
+    height: 400px;
+    opacity: 0.22;
+    filter: blur(30px);
+  }
+  .laser {
+    height: 3px;
+    opacity: 0.5;
+  }
 }
