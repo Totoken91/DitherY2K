@@ -516,6 +516,11 @@ button:active, .btn-retro:active, .btn-download:active {
   margin-bottom: 8px;
   text-shadow: 2px 2px 0 #000;
 }
+.controls-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
 .control-row {
   margin-bottom: 8px;
 }
@@ -747,9 +752,114 @@ button:active, .btn-retro:active, .btn-download:active {
   100% { transform: rotate(5deg); }
 }
 
+/* --- Preview layout --- */
+.preview-container {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
 /* --- Responsive --- */
 @media (max-width: 700px) {
-  .geo-table { display: block; }
-  .geo-sidebar, .geo-main { display: block; width: 100%; }
-  .wordart { font-size: 32px; }
+  /* Stack sidebar below main content */
+  .geo-table {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+  .geo-sidebar, .geo-main {
+    display: block;
+    width: 100% !important;
+  }
+
+  /* Smaller WordArt */
+  .wordart {
+    font-size: 28px;
+    letter-spacing: 1px;
+  }
+  .wordart-subtitle {
+    font-size: 12px;
+  }
+
+  /* Hampopo smaller */
+  .hampopo {
+    width: 36px !important;
+  }
+
+  /* Spinning stars smaller */
+  .spin-star, .spin-star-reverse {
+    font-size: 16px;
+  }
+
+  /* Header tighter */
+  .geo-header {
+    padding: 6px 4px;
+  }
+
+  /* Controls: single column on mobile */
+  .controls-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Preview: stack vertically */
+  .preview-container {
+    flex-direction: column;
+  }
+  .panel-double-bevel {
+    min-width: 100% !important;
+  }
+
+  /* Visitor counter smaller */
+  .visitor-digit {
+    font-size: 12px;
+    min-width: 12px;
+    padding: 1px 2px;
+  }
+
+  /* Footer buttons wrap better */
+  .geo-footer {
+    padding: 6px 4px;
+  }
+
+  /* Badge row wraps */
+  .badge-88x31 {
+    width: 66px;
+    height: 23px;
+  }
+
+  /* Marquee text smaller */
+  .marquee {
+    font-size: 11px;
+  }
+
+  /* Party mode button */
+  .btn-retro[style*="position: fixed"] {
+    bottom: 4px !important;
+    left: 4px !important;
+    font-size: 10px !important;
+    padding: 3px 6px !important;
+  }
+
+  /* Controls title */
+  .controls-title {
+    font-size: 14px !important;
+  }
+
+  /* Download button */
+  .btn-download {
+    font-size: 14px;
+    padding: 8px 10px;
+  }
+
+  /* Sidebar sections tighter */
+  .sidebar-section {
+    padding: 4px;
+    margin-bottom: 3px;
+  }
+
+  /* Party lights: less intense on mobile */
+  .spotlight {
+    width: 150px;
+    height: 150px;
+    opacity: 0.1;
+  }
 }

@@ -129,7 +129,7 @@ export default function Controls({
       </div>
 
       {/* ===== SHARED CONTROLS ===== */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px" }}>
+      <div className="controls-grid">
         {/* Resolution */}
         <div className="control-row">
           <label className="control-label">{">> "}Resolution:</label>
@@ -197,7 +197,7 @@ export default function Controls({
 
       {/* ===== DITHER-SPECIFIC ===== */}
       {isDither && (
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px" }}>
+        <div className="controls-grid">
           <div className="control-row">
             <label className="control-label">{">> "}Algorithm:</label>
             <select
@@ -258,7 +258,7 @@ export default function Controls({
             </div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px" }}>
+          <div className="controls-grid">
             <div className="control-row">
               <label className="control-label">
                 CCD Noise: <span style={{ color: "#ffff00" }}>{values.digicamNoise}</span>

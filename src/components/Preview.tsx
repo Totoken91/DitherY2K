@@ -50,7 +50,7 @@ export default function Preview({
   }
 
   return (
-    <div style={{ display: "flex", gap: "4px", flexWrap: "wrap" }}>
+    <div className="preview-container">
       {/* Original */}
       <div className="panel-double-bevel" style={{ flex: 1, minWidth: 0 }}>
         <div className="panel-double-bevel-inner">
