@@ -24,8 +24,8 @@ export default function WebampPlayer() {
       // Center the main window on screen
       const mainW = 275;
       const mainH = 116;
-      const x = Math.round((window.innerWidth - mainW) / 2);
-      const y = Math.round((window.innerHeight - mainH) / 2 - 50);
+      const left = Math.round((window.innerWidth - mainW) / 2);
+      const top = Math.round((window.innerHeight - mainH) / 2 - 50);
 
       const webamp = new Webamp({
         initialTracks: [
@@ -39,9 +39,9 @@ export default function WebampPlayer() {
         },
         zIndex: 1000,
         windowLayout: {
-          main: { position: { x, y } },
-          equalizer: { position: { x, y: y + mainH } },
-          playlist: { position: { x, y: y + mainH + 116 } },
+          main: { position: { top, left } },
+          equalizer: { position: { top: top + mainH, left } },
+          playlist: { position: { top: top + mainH + 116, left } },
         },
       });
 
