@@ -10,12 +10,53 @@ export type DitherAlgorithm =
 
 export type DigicamColorCast = "none" | "warm" | "cool";
 
+export type PaletteMode = "auto" | "gameboy" | "cga" | "ega" | "grayscale";
+
 export interface DitherOptions {
   algorithm: DitherAlgorithm;
   colorCount: number; // 2–64
+  paletteMode: PaletteMode;
   threshold: number; // 0–255, used by threshold algo
   brightness: number; // -100 to 100
   contrast: number; // -100 to 100
+}
+
+// ----- Preset palettes -----
+
+const PALETTE_GAMEBOY: RGB[] = [
+  [15, 56, 15], [48, 98, 48], [139, 172, 15], [155, 188, 15],
+];
+
+const PALETTE_CGA: RGB[] = [
+  [0, 0, 0], [85, 255, 255], [255, 85, 255], [255, 255, 255],
+];
+
+const PALETTE_EGA: RGB[] = [
+  [0,0,0], [0,0,170], [0,170,0], [0,170,170],
+  [170,0,0], [170,0,170], [170,85,0], [170,170,170],
+  [85,85,85], [85,85,255], [85,255,85], [85,255,255],
+  [255,85,85], [255,85,255], [255,255,85], [255,255,255],
+];
+
+function generateGrayscale(count: number): RGB[] {
+  const palette: RGB[] = [];
+  for (let i = 0; i < count; i++) {
+    const v = Math.round((i * 255) / (count - 1));
+    palette.push([v, v, v]);
+  }
+  return palette;
+}
+
+function getPresetPalette(mode: PaletteMode, colorCount: number, imageData?: ImageData): RGB[] {
+  switch (mode) {
+    case "gameboy": return PALETTE_GAMEBOY;
+    case "cga": return PALETTE_CGA;
+    case "ega": return PALETTE_EGA;
+    case "grayscale": return generateGrayscale(Math.max(2, Math.min(colorCount, 64)));
+    case "auto":
+    default:
+      return generatePalette(colorCount, imageData);
+  }
 }
 
 export interface DigicamOptions {
@@ -30,7 +71,8 @@ export interface DigicamOptions {
 
 export const DEFAULT_OPTIONS: DitherOptions = {
   algorithm: "floyd-steinberg",
-  colorCount: 2,
+  colorCount: 16,
+  paletteMode: "auto",
   threshold: 128,
   brightness: 0,
   contrast: 0,
@@ -44,12 +86,13 @@ function clamp(v: number): number {
   return v < 0 ? 0 : v > 255 ? 255 : Math.round(v);
 }
 
-/** Euclidean distance squared (no need for sqrt to compare) */
+/** Perceptual color distance (weighted for human eye sensitivity) */
 function colorDistSq(a: RGB, b: RGB): number {
   const dr = a[0] - b[0];
   const dg = a[1] - b[1];
   const db = a[2] - b[2];
-  return dr * dr + dg * dg + db * db;
+  // Green is most sensitive, red next, blue least
+  return dr * dr * 2 + dg * dg * 4 + db * db * 3;
 }
 
 function findClosestColor(color: RGB, palette: RGB[]): RGB {
@@ -65,22 +108,35 @@ function findClosestColor(color: RGB, palette: RGB[]): RGB {
   return best;
 }
 
-// ----- Palette generation (uniform quantization) -----
+// ----- Palette generation: Median Cut -----
 
 /**
- * Generate a uniform palette with `count` colors.
- * For count=2 → black & white.
- * Otherwise generates the full RGB cube for the given step count
- * to ensure all corners (including white, yellow) are always present.
+ * Generate an adaptive palette from image data using Median Cut.
+ * Samples pixels from the image and finds the best N representative colors.
  */
-export function generatePalette(count: number): RGB[] {
+export function generatePalette(count: number, imageData?: ImageData): RGB[] {
   if (count <= 2) return [[0, 0, 0], [255, 255, 255]];
 
-  // Number of steps per channel: cube root rounded up
-  const stepsPerChannel = Math.max(2, Math.ceil(Math.pow(count, 1 / 3)));
+  // If no image data provided, fall back to uniform palette
+  if (!imageData) return generateUniformPalette(count);
 
-  // Always generate the FULL cube — don't truncate early.
-  // Truncating causes missing corners (no white/yellow at low counts).
+  // Sample pixels from the image (cap at 20000 for performance)
+  const { data, width, height } = imageData;
+  const totalPixels = width * height;
+  const sampleCount = Math.min(totalPixels, 20000);
+  const step = Math.max(1, Math.floor(totalPixels / sampleCount));
+
+  const samples: RGB[] = [];
+  for (let i = 0; i < totalPixels; i += step) {
+    const idx = i * 4;
+    samples.push([data[idx], data[idx + 1], data[idx + 2]]);
+  }
+
+  return medianCut(samples, count);
+}
+
+function generateUniformPalette(count: number): RGB[] {
+  const stepsPerChannel = Math.max(2, Math.ceil(Math.pow(count, 1 / 3)));
   const palette: RGB[] = [];
   for (let r = 0; r < stepsPerChannel; r++) {
     for (let g = 0; g < stepsPerChannel; g++) {
@@ -93,8 +149,70 @@ export function generatePalette(count: number): RGB[] {
       }
     }
   }
-
   return palette;
+}
+
+function medianCut(pixels: RGB[], numColors: number): RGB[] {
+  if (pixels.length === 0) return [[0, 0, 0]];
+
+  let boxes: RGB[][] = [pixels];
+
+  while (boxes.length < numColors) {
+    // Find the box with the largest color range
+    let largestIdx = 0;
+    let largestRange = -1;
+
+    for (let i = 0; i < boxes.length; i++) {
+      const box = boxes[i];
+      if (box.length <= 1) continue;
+      for (let ch = 0; ch < 3; ch++) {
+        let min = 255, max = 0;
+        for (const p of box) {
+          if (p[ch] < min) min = p[ch];
+          if (p[ch] > max) max = p[ch];
+        }
+        const range = max - min;
+        if (range > largestRange) {
+          largestRange = range;
+          largestIdx = i;
+        }
+      }
+    }
+
+    const box = boxes[largestIdx];
+    if (!box || box.length <= 1) break;
+
+    // Find the channel with the largest range in this box
+    let splitCh = 0;
+    let maxRange = -1;
+    for (let ch = 0; ch < 3; ch++) {
+      let min = 255, max = 0;
+      for (const p of box) {
+        if (p[ch] < min) min = p[ch];
+        if (p[ch] > max) max = p[ch];
+      }
+      if (max - min > maxRange) {
+        maxRange = max - min;
+        splitCh = ch;
+      }
+    }
+
+    // Sort by that channel and split at median
+    box.sort((a, b) => a[splitCh] - b[splitCh]);
+    const mid = Math.floor(box.length / 2);
+
+    boxes.splice(largestIdx, 1, box.slice(0, mid), box.slice(mid));
+  }
+
+  // Average color of each box = palette entry
+  return boxes.map((box) => {
+    let r = 0, g = 0, b = 0;
+    for (const p of box) {
+      r += p[0]; g += p[1]; b += p[2];
+    }
+    const n = box.length;
+    return [Math.round(r / n), Math.round(g / n), Math.round(b / n)] as RGB;
+  });
 }
 
 // ----- Brightness / Contrast adjustment -----
@@ -262,14 +380,15 @@ function orderedBayer(
   h: number,
   palette: RGB[]
 ): void {
-  // Compute spread: how far apart the palette values are on average
-  // This controls how much the Bayer offset influences quantization
-  const spread = 255 / Math.max(1, palette.length - 1);
+  // Spread proportional to step size between palette levels.
+  // For N colors, levels per channel ≈ cbrt(N), step ≈ 256/levels.
+  const levelsPerChannel = Math.max(2, Math.ceil(Math.pow(palette.length, 1 / 3)));
+  const spread = 256 / levelsPerChannel;
 
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
       const i = (y * w + x) * 3;
-      // Bayer threshold normalized to -0.5..+0.5 range, scaled by spread
+      // Bayer threshold: normalize matrix value to -0.5..+0.5, scale by spread
       const bayerValue = (BAYER_8X8[y & 7][x & 7] / 64 - 0.5) * spread;
 
       const adjusted: RGB = [
@@ -500,7 +619,7 @@ export function applyDithering(
   options: DitherOptions
 ): void {
   const { width, height, data } = imageData;
-  const palette = generatePalette(options.colorCount);
+  const palette = getPresetPalette(options.paletteMode, options.colorCount, imageData);
 
   // Copy pixel data to float array for error diffusion precision
   const pixels = new Float32Array(width * height * 3);

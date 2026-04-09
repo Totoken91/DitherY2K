@@ -1,6 +1,6 @@
 "use client";
 
-import { type DitherAlgorithm, type DigicamColorCast } from "@/lib/dithering";
+import { type DitherAlgorithm, type DigicamColorCast, type PaletteMode } from "@/lib/dithering";
 import {
   type ResolutionPreset,
   type ProcessingMode,
@@ -18,6 +18,7 @@ export interface ControlValues {
   // Dither
   algorithm: DitherAlgorithm;
   colorCount: number;
+  paletteMode: PaletteMode;
   threshold: number;
   // Digicam
   digicamNoise: number;
@@ -213,15 +214,32 @@ export default function Controls({
           </div>
 
           <div className="control-row">
-            <label className="control-label">
-              {">> "}Colors: <span style={{ color: "#ffff00" }}>{values.colorCount}</span>
-            </label>
-            <input
-              type="range" min={2} max={64} value={values.colorCount}
-              onChange={(e) => set("colorCount", Number(e.target.value))}
-              style={{ width: "100%", cursor: "pointer" }}
-            />
+            <label className="control-label">{">> "}Palette:</label>
+            <select
+              value={values.paletteMode}
+              onChange={(e) => set("paletteMode", e.target.value as PaletteMode)}
+              className="select-retro"
+            >
+              <option value="auto">Auto (Median Cut)</option>
+              <option value="gameboy">Game Boy</option>
+              <option value="cga">CGA</option>
+              <option value="ega">EGA (16 colors)</option>
+              <option value="grayscale">Grayscale</option>
+            </select>
           </div>
+
+          {(values.paletteMode === "auto" || values.paletteMode === "grayscale") && (
+            <div className="control-row">
+              <label className="control-label">
+                {">> "}Colors: <span style={{ color: "#ffff00" }}>{values.colorCount}</span>
+              </label>
+              <input
+                type="range" min={2} max={64} value={values.colorCount}
+                onChange={(e) => set("colorCount", Number(e.target.value))}
+                style={{ width: "100%", cursor: "pointer" }}
+              />
+            </div>
+          )}
 
           {values.algorithm === "threshold" && (
             <div className="control-row" style={{ gridColumn: "1 / -1" }}>

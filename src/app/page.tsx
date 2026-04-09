@@ -28,7 +28,8 @@ const DEFAULT_CONTROLS: ControlValues = {
   contrast: 0,
   // Dither
   algorithm: "floyd-steinberg",
-  colorCount: 2,
+  colorCount: 16,
+  paletteMode: "auto",
   threshold: 128,
   // Digicam
   digicamNoise: 35,
@@ -93,6 +94,7 @@ export default function Home() {
               dither: {
                 algorithm: ctrl.algorithm,
                 colorCount: ctrl.colorCount,
+                paletteMode: ctrl.paletteMode,
                 threshold: ctrl.threshold,
                 brightness: ctrl.brightness,
                 contrast: ctrl.contrast,
