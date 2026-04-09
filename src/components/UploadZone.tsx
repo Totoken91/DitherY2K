@@ -70,16 +70,16 @@ export default function UploadZone({ onImageLoaded }: UploadZoneProps) {
       <div
         className="pulse"
         style={{
-          fontSize: "20px",
+          fontSize: "14px",
           color: "#ffff00",
-          fontFamily: "Impact, sans-serif",
+          fontFamily: "'Press Start 2P', cursive",
           textShadow: "2px 2px 0 #000",
           marginBottom: "4px",
         }}
       >
         {">> "}Drop your image here!!{" <<"}
       </div>
-      <div style={{ color: "#00ffff", fontSize: "11px", fontFamily: "'Comic Sans MS', cursive" }}>
+      <div style={{ color: "#00ffff", fontSize: "11px", fontFamily: "'VT323', monospace" }}>
         ...or click to browse (JPG, PNG, WebP)
       </div>
     </div>

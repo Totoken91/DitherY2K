@@ -92,7 +92,7 @@ export default function Controls({
           style={{
             flex: 1,
             fontSize: "13px",
-            fontFamily: "Impact, sans-serif",
+            fontFamily: "'Silkscreen', cursive",
             padding: "6px",
             background: isDither ? "#c0c0c0" : "#808080",
             borderTop: isDither ? "2px solid #000" : "2px solid #fff",
@@ -109,7 +109,7 @@ export default function Controls({
           style={{
             flex: 1,
             fontSize: "13px",
-            fontFamily: "Impact, sans-serif",
+            fontFamily: "'Silkscreen', cursive",
             padding: "6px",
             cursor: "pointer",
             background: isDigicam ? "#c0c0c0" : "#808080",
@@ -330,7 +330,7 @@ export default function Controls({
       </button>
       <div style={{
         textAlign: "center", color: "#808080", fontSize: "9px",
-        marginTop: "3px", fontFamily: "'Comic Sans MS', cursive",
+        marginTop: "3px", fontFamily: "'VT323', monospace",
       }}>
         {"Right-click > Save As for MAXIMUM quality!!!"}
       </div>

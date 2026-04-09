@@ -179,7 +179,7 @@ export default function Home() {
 
         <div style={{ display: "flex", justifyContent: "center", gap: "8px", alignItems: "center", margin: "6px 0" }}>
           <span className="blink" style={{ color: "#ff0000", fontSize: "14px" }}>{"⚠️"}</span>
-          <span className="rainbow-text" style={{ fontFamily: "Impact, sans-serif", fontSize: "14px" }}>
+          <span className="rainbow-text" style={{ fontFamily: "'Silkscreen', cursive", fontSize: "14px" }}>
             {"WARNING : EXTREMELY COOL"}
           </span>
           <span className="blink" style={{ color: "#ff0000", fontSize: "14px" }}>{"⚠️"}</span>
@@ -256,7 +256,7 @@ export default function Home() {
           {/* Extremely Cool */}
           <div className="sidebar-section" style={{ textAlign: "center" }}>
             <div className="blink" style={{ color: "#ff0000", fontSize: "11px", fontWeight: "bold" }}>{"⚠️ WARNING ⚠️"}</div>
-            <div className="rainbow-text" style={{ fontSize: "12px", fontFamily: "Impact, sans-serif", margin: "2px 0" }}>EXTREMELY COOL</div>
+            <div className="rainbow-text" style={{ fontSize: "12px", fontFamily: "'Silkscreen', cursive", margin: "2px 0" }}>EXTREMELY COOL</div>
             <div style={{ color: "#ffff00", fontSize: "10px" }}>More features soon!!!</div>
           </div>
 
@@ -319,7 +319,7 @@ export default function Home() {
           {!image && (
             <div className="outset-box" style={{ marginTop: "4px" }}>
               <div style={{
-                fontFamily: "Impact, sans-serif",
+                fontFamily: "'Silkscreen', cursive",
                 color: "#ff00ff",
                 fontSize: "16px",
                 textShadow: "2px 2px 0 #000",
@@ -394,7 +394,7 @@ export default function Home() {
           <img src="/gifs/fire-bar.png" alt="" style={{ width: "60%", height: "6px" }} />
         </div>
 
-        <div style={{ color: "#808080", fontSize: "10px", fontFamily: "'Comic Sans MS', cursive" }}>
+        <div style={{ color: "#808080", fontSize: "10px", fontFamily: "'VT323', monospace" }}>
           {"© 2003-2026 DitherY2K. All rights reserved."}
           <br />
           <span style={{ color: "#666" }}>

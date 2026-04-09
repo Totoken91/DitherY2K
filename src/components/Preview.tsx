@@ -38,10 +38,10 @@ export default function Preview({
     return (
       <div className="panel-double-bevel">
         <div className="panel-double-bevel-inner" style={{ textAlign: "center", padding: "40px 20px" }}>
-          <div style={{ color: "#808080", fontFamily: "'Courier New', monospace", fontSize: "14px", textShadow: "0 0 4px #333" }}>
+          <div style={{ color: "#808080", fontFamily: "'Press Start 2P', cursive", fontSize: "14px", textShadow: "0 0 4px #333" }}>
             {">> INSERT COIN TO CONTINUE <<"}
           </div>
-          <div style={{ color: "#555", fontSize: "11px", marginTop: "8px", fontFamily: "'Comic Sans MS', cursive" }}>
+          <div style={{ color: "#555", fontSize: "11px", marginTop: "8px", fontFamily: "'Comic Neue', cursive" }}>
             {"(upload an image you n00b!!)"}
           </div>
         </div>
@@ -56,7 +56,7 @@ export default function Preview({
         <div className="panel-double-bevel-inner">
           <div style={{
             textAlign: "center",
-            fontFamily: "Impact, sans-serif",
+            fontFamily: "'Silkscreen', cursive",
             fontSize: "13px",
             color: "#00ffff",
             textShadow: "1px 1px 0 #000",
@@ -82,7 +82,7 @@ export default function Preview({
         <div className="panel-double-bevel-inner">
           <div style={{
             textAlign: "center",
-            fontFamily: "Impact, sans-serif",
+            fontFamily: "'Silkscreen', cursive",
             fontSize: "13px",
             color: "#00ffff",
             textShadow: "1px 1px 0 #000",
