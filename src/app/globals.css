@@ -120,21 +120,6 @@ button:active, .btn-retro:active, .btn-download:active {
   color: #00ffff;
   filter: drop-shadow(0 0 4px #00ffff);
 }
-/* Override when spin-stars are inside wordart */
-.wordart .spin-star,
-.wordart .spin-star-reverse {
-  background: none;
-  -webkit-background-clip: unset;
-  background-clip: unset;
-  -webkit-text-fill-color: unset;
-  font-size: 0.6em;
-}
-.wordart .spin-star {
-  color: #ffff00;
-}
-.wordart .spin-star-reverse {
-  color: #00ffff;
-}
 @keyframes spin-star {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
@@ -605,6 +590,13 @@ button:active, .btn-retro:active, .btn-download:active {
   margin: 4px 0;
   flex-wrap: nowrap;
 }
+.hampopo-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 1;
+  min-width: 0;
+}
 .hampopo-container {
   position: relative;
   display: inline-block;
@@ -836,8 +828,8 @@ button:active, .btn-retro:active, .btn-download:active {
   .hampopo {
     width: 64px !important;
   }
-  .wordart .spin-star,
-  .wordart .spin-star-reverse {
+  .hampopo-title .spin-star,
+  .hampopo-title .spin-star-reverse {
     display: none !important;
   }
 

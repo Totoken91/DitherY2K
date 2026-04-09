@@ -35,16 +35,20 @@ export default function Hampopo() {
         )}
       </div>
 
-      {/* Title — stars are inside the h1 so they never wrap separately */}
-      <h1
-        className="wordart"
-        onClick={() => alert("You found the secret!! You are a true webmaster 🏆")}
-        style={{ cursor: "pointer" }}
-      >
+      {/* Title with stars alongside */}
+      <div className="hampopo-title">
         <span className="spin-star">{"✦"}</span>
-        {" DitherY2K "}
-        <span className="spin-star-reverse">{"✦"}</span>
-      </h1>
+        <span className="spin-star-reverse">{"✧"}</span>
+        <h1
+          className="wordart"
+          onClick={() => alert("You found the secret!! You are a true webmaster 🏆")}
+          style={{ cursor: "pointer" }}
+        >
+          {"DitherY2K"}
+        </h1>
+        <span className="spin-star-reverse">{"✧"}</span>
+        <span className="spin-star">{"✦"}</span>
+      </div>
 
       {/* Right Hampopo */}
       <div className="hampopo-container">
