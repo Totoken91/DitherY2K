@@ -2,8 +2,8 @@ import { NextRequest } from "next/server";
 import { redis } from "@/lib/redis";
 
 const BOT_PATTERNS = [
-  /bot/i, /crawl/i, /spider/i, /slurp/i, /mediapartners/i,
-  /vercel/i, /preview/i, /headless/i, /phantom/i, /puppeteer/i,
+  /bot\b/i, /crawl/i, /spider/i, /slurp/i, /mediapartners/i,
+  /headless/i, /phantom/i, /puppeteer/i,
   /lighthouse/i, /chrome-lighthouse/i, /pagespeed/i, /gtmetrix/i,
   /pingdom/i, /uptimerobot/i,
 ];
@@ -12,8 +12,6 @@ function isBot(req: NextRequest): boolean {
   const ua = req.headers.get("user-agent") || "";
   if (!ua || ua.length < 10) return true;
   if (BOT_PATTERNS.some((p) => p.test(ua))) return true;
-  // Vercel deployment probes often have these headers
-  if (req.headers.get("x-vercel-deployment-url")) return true;
   if (req.headers.get("purpose") === "prefetch") return true;
   return false;
 }
