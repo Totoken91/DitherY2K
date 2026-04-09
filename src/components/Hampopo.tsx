@@ -14,7 +14,7 @@ export default function Hampopo() {
   }, []);
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "6px", margin: "4px 0" }}>
+    <div className="hampopo-row">
       {/* Left Hampopo */}
       <div className="hampopo-container">
         {/* eslint-disable-next-line @next/next/no-img-element */}

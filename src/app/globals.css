@@ -582,6 +582,13 @@ button:active, .btn-retro:active, .btn-download:active {
 }
 
 /* --- Hampopo kawaii bounce --- */
+.hampopo-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0;
+}
 .hampopo-container {
   position: relative;
   display: inline-block;
@@ -803,9 +810,18 @@ button:active, .btn-retro:active, .btn-download:active {
     font-size: 0.75rem;
   }
 
-  /* Hampopo bigger on mobile (was too small at 36px) */
+  /* Hampopo: bigger, closer to title, no star overflow */
+  .hampopo-row {
+    gap: 2px;
+  }
   .hampopo {
-    width: 48px !important;
+    width: 52px !important;
+  }
+  .hampopo-container {
+    overflow: hidden;
+  }
+  .hampopo-star {
+    display: none;
   }
 
   /* Spinning stars */
