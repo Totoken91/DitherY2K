@@ -22,7 +22,6 @@ export default function Hampopo() {
           src="/hampopo.png"
           alt="Hampopo"
           className={`hampopo ${isPlaying ? "hampopo-beat-left" : ""}`}
-          style={{ width: "56px", height: "auto" }}
         />
         {isPlaying && (
           <>
@@ -36,20 +35,16 @@ export default function Hampopo() {
         )}
       </div>
 
-      {/* Title */}
-      <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+      {/* Title — stars are inside the h1 so they never wrap separately */}
+      <h1
+        className="wordart"
+        onClick={() => alert("You found the secret!! You are a true webmaster 🏆")}
+        style={{ cursor: "pointer" }}
+      >
         <span className="spin-star">{"✦"}</span>
-        <span className="spin-star-reverse">{"✧"}</span>
-        <h1
-          className="wordart"
-          onClick={() => alert("You found the secret!! You are a true webmaster 🏆")}
-          style={{ cursor: "pointer" }}
-        >
-          {"✧ DitherY2K ✧"}
-        </h1>
-        <span className="spin-star-reverse">{"✧"}</span>
-        <span className="spin-star">{"✦"}</span>
-      </div>
+        {" DitherY2K "}
+        <span className="spin-star-reverse">{"✦"}</span>
+      </h1>
 
       {/* Right Hampopo */}
       <div className="hampopo-container">
@@ -58,7 +53,7 @@ export default function Hampopo() {
           src="/hampopo.png"
           alt="Hampopo"
           className={`hampopo ${isPlaying ? "hampopo-beat-right" : ""}`}
-          style={{ width: "56px", height: "auto", transform: isPlaying ? undefined : "scaleX(-1)" }}
+          style={{ transform: isPlaying ? undefined : "scaleX(-1)" }}
         />
         {isPlaying && (
           <>

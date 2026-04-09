@@ -120,6 +120,21 @@ button:active, .btn-retro:active, .btn-download:active {
   color: #00ffff;
   filter: drop-shadow(0 0 4px #00ffff);
 }
+/* Override when spin-stars are inside wordart */
+.wordart .spin-star,
+.wordart .spin-star-reverse {
+  background: none;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+  -webkit-text-fill-color: unset;
+  font-size: 0.6em;
+}
+.wordart .spin-star {
+  color: #ffff00;
+}
+.wordart .spin-star-reverse {
+  color: #00ffff;
+}
 @keyframes spin-star {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
@@ -586,14 +601,18 @@ button:active, .btn-retro:active, .btn-download:active {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   margin: 4px 0;
+  flex-wrap: nowrap;
 }
 .hampopo-container {
   position: relative;
   display: inline-block;
+  flex-shrink: 0;
 }
 .hampopo {
+  width: 56px;
+  height: auto;
   filter: drop-shadow(0 0 8px rgba(255, 150, 100, 0.6));
   image-rendering: auto;
 }
@@ -810,18 +829,17 @@ button:active, .btn-retro:active, .btn-download:active {
     font-size: 0.75rem;
   }
 
-  /* Hampopo: bigger, closer to title, no star overflow */
+  /* Hampopo on mobile: big, no stars, no spinning stars */
   .hampopo-row {
-    gap: 2px;
+    gap: 4px;
   }
   .hampopo {
-    width: 52px !important;
+    width: 64px !important;
   }
-  .hampopo-container {
-    overflow: hidden;
-  }
-  .hampopo-star {
-    display: none;
+  .hampopo-star,
+  .spin-star,
+  .spin-star-reverse {
+    display: none !important;
   }
 
   /* Spinning stars */
