@@ -829,22 +829,16 @@ button:active, .btn-retro:active, .btn-download:active {
     font-size: 0.75rem;
   }
 
-  /* Hampopo on mobile: big, no stars, no spinning stars */
+  /* Hampopo on mobile: big, hide only spinning stars (not hampopo particles) */
   .hampopo-row {
     gap: 4px;
   }
   .hampopo {
     width: 64px !important;
   }
-  .hampopo-star,
-  .spin-star,
-  .spin-star-reverse {
+  .wordart .spin-star,
+  .wordart .spin-star-reverse {
     display: none !important;
-  }
-
-  /* Spinning stars */
-  .spin-star, .spin-star-reverse {
-    font-size: 18px;
   }
 
   /* Header */
