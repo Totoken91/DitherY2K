@@ -72,7 +72,7 @@ export default function Preview({
   };
 
   const canvasStyle = {
-    maxWidth: "100%",
+    width: "100%",
     maxHeight: isMobile ? "300px" : "380px",
     imageRendering: "pixelated" as const,
     display: "block",
