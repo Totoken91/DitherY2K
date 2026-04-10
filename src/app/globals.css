@@ -778,11 +778,25 @@ button:active, .btn-retro:active, .btn-download:active {
   100% { transform: rotate(5deg); }
 }
 
+/* --- Main content flow --- */
+.main-flow {
+  display: flex;
+  flex-direction: column;
+}
+.main-upload { order: 1; }
+.main-preview { order: 2; }
+.main-controls { order: 3; }
+
 /* --- Preview layout --- */
 .preview-container {
   display: flex;
   gap: 4px;
   flex-wrap: wrap;
+}
+
+/* --- Sidebar toggle (hidden on desktop) --- */
+.sidebar-toggle {
+  display: none;
 }
 
 /* --- Party Mode button shine --- */
@@ -810,6 +824,32 @@ button:active, .btn-retro:active, .btn-download:active {
   .geo-sidebar, .geo-main {
     display: block;
     width: 100% !important;
+  }
+
+  /* Reorder: controls before preview on mobile */
+  .main-flow {
+    display: flex;
+    flex-direction: column;
+  }
+  .main-upload { order: 1; }
+  .main-controls { order: 2; }
+  .main-preview { order: 3; }
+
+  /* Sidebar: collapsible on mobile */
+  .sidebar-toggle {
+    display: block !important;
+  }
+  .sidebar-content {
+    display: none;
+  }
+  .sidebar-content.sidebar-open {
+    display: block;
+  }
+
+  /* Hide subtitle + warning on mobile header */
+  .wordart-subtitle,
+  .mobile-hide {
+    display: none !important;
   }
 
   /* WordArt */

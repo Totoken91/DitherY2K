@@ -67,6 +67,7 @@ export default function Home() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [ditheredCount, setDitheredCount] = useState(0);
   const [visitorCount, setVisitorCount] = useState("00000000");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Fetch + increment visitor count on mount
@@ -179,7 +180,7 @@ export default function Home() {
           <span className="new-badge">NEW!</span>
         </div>
 
-        <div style={{ display: "flex", justifyContent: "center", gap: "8px", alignItems: "center", margin: "6px 0" }}>
+        <div className="mobile-hide" style={{ display: "flex", justifyContent: "center", gap: "8px", alignItems: "center", margin: "6px 0" }}>
           <span className="blink" style={{ color: "#ff0000", fontSize: "14px" }}>{"⚠️"}</span>
           <span className="rainbow-text" style={{ fontFamily: "'Silkscreen', cursive", fontSize: "14px" }}>
             {"WARNING : EXTREMELY COOL"}
@@ -203,6 +204,15 @@ export default function Home() {
       <div className="geo-table" style={{ padding: "0 4px" }}>
         {/* --- SIDEBAR --- */}
         <div className="geo-sidebar">
+          {/* Mobile: collapsible toggle */}
+          <button
+            className="btn-retro sidebar-toggle"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            style={{ width: "100%", marginBottom: "4px", fontSize: "12px", textAlign: "center" }}
+          >
+            {sidebarOpen ? "▼ Hide Site Info ▼" : "★ Show Site Info ★"}
+          </button>
+          <div className={`sidebar-content ${sidebarOpen ? "sidebar-open" : ""}`}>
           {/* Webmaster */}
           <div className="sidebar-section">
             <div className="sidebar-title glow-pink">{"★ Welcome! ★"}</div>
@@ -287,35 +297,41 @@ export default function Home() {
               <span style={{ color: "#808080" }}>@geocities.com</span>
             </span>
           </div>
+          </div>{/* end sidebar-content */}
         </div>
 
         {/* --- MAIN CONTENT --- */}
         <div className="geo-main">
-          {/* Upload zone */}
-          <div className="groove-box" style={{ padding: "4px" }}>
-            <UploadZone onImageLoaded={handleImageLoaded} />
-          </div>
-
-          {/* Preview */}
-          {image && (
-            <div className="groove-box" style={{ padding: "4px" }}>
-              <Preview
-                originalImage={image}
-                resultCanvas={resultCanvas}
-                isProcessing={isProcessing}
-              />
+          <div className="main-flow">
+            {/* Upload zone */}
+            <div className="groove-box main-upload" style={{ padding: "4px" }}>
+              <UploadZone onImageLoaded={handleImageLoaded} />
             </div>
-          )}
 
-          {/* Controls — directly under preview, always visible */}
-          {image && (
-            <Controls
-              values={controls}
-              onChange={setControls}
-              onDownload={handleDownload}
-              hasImage={!!resultCanvas}
-            />
-          )}
+            {/* Controls */}
+            {image && (
+              <div className="main-controls">
+                <Controls
+                  values={controls}
+                  onChange={setControls}
+                  onDownload={handleDownload}
+                  hasImage={!!resultCanvas}
+                />
+              </div>
+            )}
+
+            {/* Preview */}
+            {image && (
+              <div className="groove-box main-preview" style={{ padding: "4px" }}>
+                <Preview
+                  originalImage={image}
+                  resultCanvas={resultCanvas}
+                  isProcessing={isProcessing}
+                />
+              </div>
+            )}
+
+          </div>{/* end main-flow */}
 
           {/* How to use (when no image) */}
           {!image && (

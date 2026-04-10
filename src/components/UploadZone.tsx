@@ -77,10 +77,10 @@ export default function UploadZone({ onImageLoaded }: UploadZoneProps) {
           marginBottom: "4px",
         }}
       >
-        {">> "}Drop your image here!!{" <<"}
+        {">> Tap to upload! <<"}
       </div>
       <div style={{ color: "#00ffff", fontSize: "11px", fontFamily: "'VT323', monospace" }}>
-        ...or click to browse (JPG, PNG, WebP)
+        JPG, PNG, WebP
       </div>
     </div>
   );
