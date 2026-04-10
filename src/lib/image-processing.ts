@@ -76,24 +76,19 @@ function resizeImage(
     return canvas;
   }
 
-  // If source is portrait but target is landscape, swap target dimensions
-  const isPortrait = source.naturalHeight > source.naturalWidth;
-  if (isPortrait && targetW > targetH) {
-    const tmp = targetW;
-    targetW = targetH;
-    targetH = tmp;
-  }
-
-  const srcRatio = source.naturalWidth / source.naturalHeight;
-  const tgtRatio = targetW / targetH;
+  // Use the longest side of the preset as the max dimension.
+  // The image keeps its own aspect ratio — no stretching.
+  const maxSide = Math.max(targetW, targetH);
+  const srcW = source.naturalWidth;
+  const srcH = source.naturalHeight;
 
   let w: number, h: number;
-  if (srcRatio > tgtRatio) {
-    w = targetW;
-    h = Math.round(targetW / srcRatio);
+  if (srcW >= srcH) {
+    w = maxSide;
+    h = Math.round(maxSide * (srcH / srcW));
   } else {
-    h = targetH;
-    w = Math.round(targetH * srcRatio);
+    h = maxSide;
+    w = Math.round(maxSide * (srcW / srcH));
   }
 
   canvas.width = w;
