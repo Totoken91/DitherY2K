@@ -344,7 +344,7 @@ export default function Controls({
       <hr className="rainbow-hr" />
 
       <button className="btn-download" onClick={onDownload} disabled={!hasImage}>
-        {"⬇ DOWNLOAD YOUR IMAGE ⬇"}
+        {"DOWNLOAD"}
       </button>
       <div style={{
         textAlign: "center", color: "#808080", fontSize: "9px",
