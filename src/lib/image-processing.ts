@@ -64,23 +64,24 @@ export function loadImageFromFile(file: File): Promise<HTMLImageElement> {
 function resizeImage(
   source: HTMLImageElement,
   targetW: number,
-  targetH: number
+  targetH: number,
+  crop: { sx: number; sy: number; sw: number; sh: number }
 ): HTMLCanvasElement {
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d")!;
 
   if (targetW === 0 || targetH === 0) {
-    canvas.width = source.naturalWidth;
-    canvas.height = source.naturalHeight;
-    ctx.drawImage(source, 0, 0);
+    canvas.width = crop.sw;
+    canvas.height = crop.sh;
+    ctx.drawImage(source, crop.sx, crop.sy, crop.sw, crop.sh, 0, 0, crop.sw, crop.sh);
     return canvas;
   }
 
   // Use the longest side of the preset as the max dimension.
-  // The image keeps its own aspect ratio — no stretching.
+  // The cropped image keeps its own aspect ratio.
   const maxSide = Math.max(targetW, targetH);
-  const srcW = source.naturalWidth;
-  const srcH = source.naturalHeight;
+  const srcW = crop.sw;
+  const srcH = crop.sh;
 
   let w: number, h: number;
   if (srcW >= srcH) {
@@ -93,7 +94,7 @@ function resizeImage(
 
   canvas.width = w;
   canvas.height = h;
-  ctx.drawImage(source, 0, 0, w, h);
+  ctx.drawImage(source, crop.sx, crop.sy, crop.sw, crop.sh, 0, 0, w, h);
   return canvas;
 }
 
@@ -114,6 +115,45 @@ function upscaleNearestNeighbor(
   return canvas;
 }
 
+// ----- Crop (center crop to aspect ratio) -----
+
+export type CropRatio = "free" | "1:1" | "3:4" | "4:3";
+
+function cropToRatio(
+  source: HTMLImageElement,
+  ratio: CropRatio
+): { sx: number; sy: number; sw: number; sh: number } {
+  const srcW = source.naturalWidth;
+  const srcH = source.naturalHeight;
+
+  if (ratio === "free") return { sx: 0, sy: 0, sw: srcW, sh: srcH };
+
+  let targetRatio: number;
+  switch (ratio) {
+    case "1:1": targetRatio = 1; break;
+    case "3:4": targetRatio = 3 / 4; break;
+    case "4:3": targetRatio = 4 / 3; break;
+    default: targetRatio = srcW / srcH;
+  }
+
+  const srcRatio = srcW / srcH;
+  let sw: number, sh: number;
+
+  if (srcRatio > targetRatio) {
+    // Source is wider — crop sides
+    sh = srcH;
+    sw = Math.round(srcH * targetRatio);
+  } else {
+    // Source is taller — crop top/bottom
+    sw = srcW;
+    sh = Math.round(srcW / targetRatio);
+  }
+
+  const sx = Math.round((srcW - sw) / 2);
+  const sy = Math.round((srcH - sh) / 2);
+  return { sx, sy, sw, sh };
+}
+
 // ----- Processing options -----
 
 export type ProcessingMode = "dither" | "digicam";
@@ -122,6 +162,7 @@ export interface ProcessingOptions {
   mode: ProcessingMode;
   resolution: ResolutionPreset;
   digicamResolution: DigicamResolutionPreset;
+  cropRatio: CropRatio;
   upscaleFactor: number;
   brightness: number;
   contrast: number;
@@ -140,8 +181,11 @@ export function processImage(
     ? DIGICAM_RESOLUTION_PRESETS[options.digicamResolution]
     : RESOLUTION_PRESETS[options.resolution];
 
+  // Step 0: Crop
+  const crop = cropToRatio(source, options.cropRatio);
+
   // Step 1: Resize
-  const resized = resizeImage(source, preset.w, preset.h);
+  const resized = resizeImage(source, preset.w, preset.h, crop);
   const ctx = resized.getContext("2d")!;
   const imageData = ctx.getImageData(0, 0, resized.width, resized.height);
 

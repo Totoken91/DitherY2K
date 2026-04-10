@@ -5,6 +5,7 @@ import {
   type ResolutionPreset,
   type DigicamResolutionPreset,
   type ProcessingMode,
+  type CropRatio,
   RESOLUTION_PRESETS,
   DIGICAM_RESOLUTION_PRESETS,
 } from "@/lib/image-processing";
@@ -14,6 +15,7 @@ export interface ControlValues {
   // Shared
   resolution: ResolutionPreset;
   digicamResolution: DigicamResolutionPreset;
+  cropRatio: CropRatio;
   upscaleEnabled: boolean;
   upscaleFactor: number;
   brightness: number;
@@ -173,6 +175,21 @@ export default function Controls({
               ))}
             </select>
           )}
+        </div>
+
+        {/* Crop */}
+        <div className="control-row">
+          <label className="control-label">{">> "}Crop:</label>
+          <select
+            value={values.cropRatio}
+            onChange={(e) => set("cropRatio", e.target.value as CropRatio)}
+            className="select-retro"
+          >
+            <option value="free">Free (original)</option>
+            <option value="1:1">1:1 (Square)</option>
+            <option value="3:4">3:4 (Portrait)</option>
+            <option value="4:3">4:3 (Landscape)</option>
+          </select>
         </div>
 
         {/* Upscale */}

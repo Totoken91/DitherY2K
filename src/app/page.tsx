@@ -23,6 +23,7 @@ const DEFAULT_CONTROLS: ControlValues = {
   // Shared
   resolution: "vga",
   digicamResolution: "nokia",
+  cropRatio: "free",
   upscaleEnabled: false,
   upscaleFactor: 2,
   brightness: 0,
@@ -95,6 +96,7 @@ export default function Home() {
               mode: ctrl.mode,
               resolution: ctrl.resolution,
               digicamResolution: ctrl.digicamResolution,
+              cropRatio: ctrl.cropRatio,
               upscaleFactor: ctrl.upscaleEnabled ? ctrl.upscaleFactor : 1,
               brightness: ctrl.brightness,
               contrast: ctrl.contrast,
