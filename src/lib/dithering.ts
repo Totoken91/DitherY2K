@@ -160,30 +160,48 @@ function medianCut(pixels: RGB[], numColors: number): RGB[] {
   if (pixels.length === 0) return [[0, 0, 0]];
 
   let boxes: RGB[][] = [pixels];
+  let iteration = 0;
 
   while (boxes.length < numColors) {
-    // Find the box with the largest color range
-    let largestIdx = 0;
-    let largestRange = -1;
+    // Alternate strategy: even iterations split by largest range,
+    // odd iterations split by most pixels. This gives more palette
+    // entries to dense clusters (skin tones, sky) while still
+    // covering the full color range.
+    const byPopulation = iteration % 2 === 1;
+    iteration++;
 
-    for (let i = 0; i < boxes.length; i++) {
-      const box = boxes[i];
-      if (box.length <= 1) continue;
-      for (let ch = 0; ch < 3; ch++) {
-        let min = 255, max = 0;
-        for (const p of box) {
-          if (p[ch] < min) min = p[ch];
-          if (p[ch] > max) max = p[ch];
+    let bestIdx = 0;
+
+    if (byPopulation) {
+      // Find the splittable box with the most pixels
+      let maxPop = -1;
+      for (let i = 0; i < boxes.length; i++) {
+        if (boxes[i].length > 1 && boxes[i].length > maxPop) {
+          maxPop = boxes[i].length;
+          bestIdx = i;
         }
-        const range = max - min;
-        if (range > largestRange) {
-          largestRange = range;
-          largestIdx = i;
+      }
+    } else {
+      // Find the box with the largest color range
+      let largestRange = -1;
+      for (let i = 0; i < boxes.length; i++) {
+        const box = boxes[i];
+        if (box.length <= 1) continue;
+        for (let ch = 0; ch < 3; ch++) {
+          let min = 255, max = 0;
+          for (const p of box) {
+            if (p[ch] < min) min = p[ch];
+            if (p[ch] > max) max = p[ch];
+          }
+          if (max - min > largestRange) {
+            largestRange = max - min;
+            bestIdx = i;
+          }
         }
       }
     }
 
-    const box = boxes[largestIdx];
+    const box = boxes[bestIdx];
     if (!box || box.length <= 1) break;
 
     // Find the channel with the largest range in this box
@@ -205,7 +223,7 @@ function medianCut(pixels: RGB[], numColors: number): RGB[] {
     box.sort((a, b) => a[splitCh] - b[splitCh]);
     const mid = Math.floor(box.length / 2);
 
-    boxes.splice(largestIdx, 1, box.slice(0, mid), box.slice(mid));
+    boxes.splice(bestIdx, 1, box.slice(0, mid), box.slice(mid));
   }
 
   // Average color of each box = palette entry
