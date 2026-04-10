@@ -76,6 +76,14 @@ function resizeImage(
     return canvas;
   }
 
+  // If source is portrait but target is landscape, swap target dimensions
+  const isPortrait = source.naturalHeight > source.naturalWidth;
+  if (isPortrait && targetW > targetH) {
+    const tmp = targetW;
+    targetW = targetH;
+    targetH = tmp;
+  }
+
   const srcRatio = source.naturalWidth / source.naturalHeight;
   const tgtRatio = targetW / targetH;
 
