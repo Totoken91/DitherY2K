@@ -22,6 +22,7 @@ const DEFAULT_CONTROLS: ControlValues = {
   mode: "dither",
   // Shared
   resolution: "vga",
+  digicamResolution: "nokia",
   upscaleEnabled: false,
   upscaleFactor: 2,
   brightness: 0,
@@ -32,13 +33,17 @@ const DEFAULT_CONTROLS: ControlValues = {
   paletteMode: "auto",
   threshold: 128,
   // Digicam
-  digicamNoise: 35,
-  digicamJpegQuality: 65,
-  digicamBloom: 25,
+  digicamNoise: 55,
+  digicamJpegQuality: 30,
+  digicamBloom: 0,
   digicamColorCast: "warm",
   digicamVignette: true,
   digicamChromatic: true,
-  digicamDateStamp: true,
+  digicamDateStamp: false,
+  digicamBarrelDistortion: 40,
+  digicamBlur: 45,
+  digicamSaturationBoost: 15,
+  digicamDynamicRangeCompress: true,
 };
 
 const BADGES = [
@@ -89,6 +94,7 @@ export default function Home() {
             const result = processImage(img, {
               mode: ctrl.mode,
               resolution: ctrl.resolution,
+              digicamResolution: ctrl.digicamResolution,
               upscaleFactor: ctrl.upscaleEnabled ? ctrl.upscaleFactor : 1,
               brightness: ctrl.brightness,
               contrast: ctrl.contrast,
@@ -108,6 +114,10 @@ export default function Home() {
                 vignette: ctrl.digicamVignette,
                 chromatic: ctrl.digicamChromatic,
                 dateStamp: ctrl.digicamDateStamp,
+                barrelDistortion: ctrl.digicamBarrelDistortion,
+                blur: ctrl.digicamBlur,
+                saturationBoost: ctrl.digicamSaturationBoost,
+                dynamicRangeCompress: ctrl.digicamDynamicRangeCompress,
               },
             });
             finalCanvasRef.current = result.final;

@@ -22,6 +22,25 @@ export const RESOLUTION_PRESETS: Record<
   original: { w: 0, h: 0, label: "Original" },
 };
 
+// ----- Digicam-specific resolutions -----
+
+export type DigicamResolutionPreset =
+  | "flip" | "webcam" | "nokia" | "dsi"
+  | "digicam1" | "digicam2" | "original";
+
+export const DIGICAM_RESOLUTION_PRESETS: Record<
+  DigicamResolutionPreset,
+  { w: number; h: number; label: string }
+> = {
+  flip: { w: 352, h: 288, label: '352×288 "Flip Phone"' },
+  webcam: { w: 320, h: 240, label: '320×240 "Webcam"' },
+  nokia: { w: 640, h: 480, label: '640×480 "Nokia 7650"' },
+  dsi: { w: 640, h: 480, label: '640×480 "Nintendo DSi"' },
+  digicam1: { w: 1024, h: 768, label: '1024×768 "Digicam 1MP"' },
+  digicam2: { w: 1600, h: 1200, label: '1600×1200 "Digicam 2MP"' },
+  original: { w: 0, h: 0, label: "Original" },
+};
+
 // ----- Load image from File -----
 
 export function loadImageFromFile(file: File): Promise<HTMLImageElement> {
@@ -99,12 +118,11 @@ export type ProcessingMode = "dither" | "digicam";
 export interface ProcessingOptions {
   mode: ProcessingMode;
   resolution: ResolutionPreset;
+  digicamResolution: DigicamResolutionPreset;
   upscaleFactor: number;
   brightness: number;
   contrast: number;
-  // Dither-specific
   dither: DitherOptions;
-  // Digicam-specific
   digicam: DigicamOptions;
 }
 
@@ -115,7 +133,9 @@ export function processImage(
   source: HTMLImageElement,
   options: ProcessingOptions
 ): { dithered: HTMLCanvasElement; final: HTMLCanvasElement } {
-  const preset = RESOLUTION_PRESETS[options.resolution];
+  const preset = options.mode === "digicam"
+    ? DIGICAM_RESOLUTION_PRESETS[options.digicamResolution]
+    : RESOLUTION_PRESETS[options.resolution];
 
   // Step 1: Resize
   const resized = resizeImage(source, preset.w, preset.h);

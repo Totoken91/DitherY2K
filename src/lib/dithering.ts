@@ -8,7 +8,7 @@ export type DitherAlgorithm =
   | "ordered"
   | "threshold";
 
-export type DigicamColorCast = "none" | "warm" | "cool";
+export type DigicamColorCast = "none" | "warm" | "cool" | "green";
 
 export type PaletteMode = "auto" | "gameboy" | "cga" | "ega" | "grayscale";
 
@@ -67,6 +67,10 @@ export interface DigicamOptions {
   vignette: boolean;
   chromatic: boolean;
   dateStamp: boolean;
+  barrelDistortion: number; // 0-100, maps to k1 = 0 to 0.25
+  blur: number; // 0-100, maps to radius 0 to 3px
+  saturationBoost: number; // 0-100, maps to +0% to +30%
+  dynamicRangeCompress: boolean;
 }
 
 export const DEFAULT_OPTIONS: DitherOptions = {
@@ -458,31 +462,35 @@ function seededRandom(x: number, y: number, salt: number): number {
 
 /**
  * Apply digicam CCD effects to an ImageData (mutates in place).
- * This is a SEPARATE pipeline from dithering — no palette quantization.
- * Brightness/contrast should already be applied.
+ * 10 effects simulating early 2000s digital camera artifacts.
  */
 export function applyDigicam(
   imageData: ImageData,
   opts: DigicamOptions
 ): void {
   const { width: w, height: h, data } = imageData;
-
-  // Work in float space
   const pixels = new Float32Array(w * h * 3);
   for (let i = 0; i < w * h; i++) {
     pixels[i * 3] = data[i * 4];
     pixels[i * 3 + 1] = data[i * 4 + 1];
     pixels[i * 3 + 2] = data[i * 4 + 2];
   }
-
   const idx = (x: number, y: number) => (y * w + x) * 3;
 
-  // --- Effect 1: Subtle color cast (bad white balance) ---
+  // --- 1. Dynamic range compression (early sensors ~6 stops) ---
+  if (opts.dynamicRangeCompress) {
+    const lo = 25, hi = 220;
+    for (let i = 0; i < pixels.length; i++) {
+      pixels[i] = lo + (pixels[i] / 255) * (hi - lo);
+    }
+  }
+
+  // --- 2. Color cast (bad white balance) ---
   if (opts.colorCast !== "none") {
-    // Subtle shifts — real digicams don't have extreme casts
-    const shifts = opts.colorCast === "warm"
-      ? [8, 2, -6]
-      : [-3, 3, 10];
+    const shifts =
+      opts.colorCast === "warm" ? [8, 2, -6] :
+      opts.colorCast === "green" ? [-4, 6, 4] :
+      [-3, 3, 10]; // cool
     for (let i = 0; i < pixels.length; i += 3) {
       pixels[i] += shifts[0];
       pixels[i + 1] += shifts[1];
@@ -490,9 +498,59 @@ export function applyDigicam(
     }
   }
 
-  // --- Effect 2: CCD noise / grain ---
+  // --- 3. Saturation boost (CCD "pop" colors) ---
+  if (opts.saturationBoost > 0) {
+    const boost = 1 + (opts.saturationBoost / 100) * 0.3;
+    for (let i = 0; i < pixels.length; i += 3) {
+      const r = pixels[i], g = pixels[i + 1], b = pixels[i + 2];
+      const gray = 0.299 * r + 0.587 * g + 0.114 * b;
+      pixels[i] = gray + (r - gray) * boost;
+      pixels[i + 1] = gray + (g - gray) * boost;
+      pixels[i + 2] = gray + (b - gray) * boost;
+    }
+  }
+
+  // --- 4. Radial lens blur (cheap plastic lens softness) ---
+  if (opts.blur > 0) {
+    const maxRadius = Math.max(1, Math.round((opts.blur / 100) * 3));
+    const cx = w / 2, cy = h / 2;
+    const maxDist = Math.sqrt(cx * cx + cy * cy);
+    // Horizontal pass with radial radius
+    const hBuf = new Float32Array(pixels);
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        const dist = Math.sqrt((x - cx) ** 2 + (y - cy) ** 2) / maxDist;
+        const r = Math.max(1, Math.round(0.3 * maxRadius + dist * dist * maxRadius * 0.7));
+        let sR = 0, sG = 0, sB = 0, c = 0;
+        for (let dx = -r; dx <= r; dx++) {
+          const nx = Math.min(w - 1, Math.max(0, x + dx));
+          const ni = idx(nx, y);
+          sR += pixels[ni]; sG += pixels[ni + 1]; sB += pixels[ni + 2]; c++;
+        }
+        const oi = idx(x, y);
+        hBuf[oi] = sR / c; hBuf[oi + 1] = sG / c; hBuf[oi + 2] = sB / c;
+      }
+    }
+    // Vertical pass
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        const dist = Math.sqrt((x - cx) ** 2 + (y - cy) ** 2) / maxDist;
+        const r = Math.max(1, Math.round(0.3 * maxRadius + dist * dist * maxRadius * 0.7));
+        let sR = 0, sG = 0, sB = 0, c = 0;
+        for (let dy = -r; dy <= r; dy++) {
+          const ny = Math.min(h - 1, Math.max(0, y + dy));
+          const ni = idx(x, ny);
+          sR += hBuf[ni]; sG += hBuf[ni + 1]; sB += hBuf[ni + 2]; c++;
+        }
+        const oi = idx(x, y);
+        pixels[oi] = sR / c; pixels[oi + 1] = sG / c; pixels[oi + 2] = sB / c;
+      }
+    }
+  }
+
+  // --- 5. CCD noise / grain ---
   if (opts.noise > 0) {
-    const amp = opts.noise * 0.25; // subtler than before
+    const amp = opts.noise * 0.25;
     for (let y = 0; y < h; y++) {
       for (let x = 0; x < w; x++) {
         const i = idx(x, y);
@@ -504,30 +562,27 @@ export function applyDigicam(
     }
   }
 
-  // --- Effect 3: JPEG compression artifacts (8×8 blocking) ---
+  // --- 6. JPEG compression artifacts (8x8 blocking) ---
   if (opts.jpegQuality < 100) {
-    // Scale influence: quality 100=none, 0=full block average
     const blockInfluence = Math.pow(1.0 - opts.jpegQuality / 100, 1.5) * 0.7;
     if (blockInfluence > 0.01) {
       for (let by = 0; by < h; by += 8) {
         for (let bx = 0; bx < w; bx += 8) {
-          let sumR = 0, sumG = 0, sumB = 0, count = 0;
-          const bh = Math.min(8, h - by);
-          const bw = Math.min(8, w - bx);
+          let sR = 0, sG = 0, sB = 0, c = 0;
+          const bh = Math.min(8, h - by), bw = Math.min(8, w - bx);
           for (let dy = 0; dy < bh; dy++) {
             for (let dx = 0; dx < bw; dx++) {
               const i = idx(bx + dx, by + dy);
-              sumR += pixels[i]; sumG += pixels[i + 1]; sumB += pixels[i + 2];
-              count++;
+              sR += pixels[i]; sG += pixels[i + 1]; sB += pixels[i + 2]; c++;
             }
           }
-          const avgR = sumR / count, avgG = sumG / count, avgB = sumB / count;
+          const aR = sR / c, aG = sG / c, aB = sB / c;
           for (let dy = 0; dy < bh; dy++) {
             for (let dx = 0; dx < bw; dx++) {
               const i = idx(bx + dx, by + dy);
-              pixels[i] += (avgR - pixels[i]) * blockInfluence;
-              pixels[i + 1] += (avgG - pixels[i + 1]) * blockInfluence;
-              pixels[i + 2] += (avgB - pixels[i + 2]) * blockInfluence;
+              pixels[i] += (aR - pixels[i]) * blockInfluence;
+              pixels[i + 1] += (aG - pixels[i + 1]) * blockInfluence;
+              pixels[i + 2] += (aB - pixels[i + 2]) * blockInfluence;
             }
           }
         }
@@ -535,19 +590,16 @@ export function applyDigicam(
     }
   }
 
-  // --- Effect 4: CCD bloom (vertical charge overflow) ---
+  // --- 7. CCD bloom (vertical charge overflow) ---
   if (opts.bloom > 0) {
     const bloomRadius = Math.max(1, Math.floor(opts.bloom / 100 * 15));
     const bloomBuf = new Float32Array(w * h * 3);
-    const threshold = 220; // only very bright pixels bloom
-
     for (let y = 0; y < h; y++) {
       for (let x = 0; x < w; x++) {
         const i = idx(x, y);
         const lum = 0.299 * pixels[i] + 0.587 * pixels[i + 1] + 0.114 * pixels[i + 2];
-        if (lum > threshold) {
-          const excess = (lum - threshold) * (opts.bloom / 100) * 0.5;
-          // Vertical spread with gentle falloff
+        if (lum > 220) {
+          const excess = (lum - 220) * (opts.bloom / 100) * 0.5;
           for (let dy = -bloomRadius; dy <= bloomRadius; dy++) {
             const ny = y + dy;
             if (ny >= 0 && ny < h && dy !== 0) {
@@ -561,39 +613,79 @@ export function applyDigicam(
         }
       }
     }
-    for (let i = 0; i < pixels.length; i++) {
-      pixels[i] += bloomBuf[i];
-    }
+    for (let i = 0; i < pixels.length; i++) pixels[i] += bloomBuf[i];
   }
 
-  // --- Effect 5: Chromatic aberration (RGB channel offset) ---
+  // --- 8. Radial chromatic aberration ---
   if (opts.chromatic) {
-    const offset = w >= 320 ? 2 : 1;
+    const maxOffset = w >= 640 ? 3 : w >= 320 ? 2 : 1;
+    const cx = w / 2, cy = h / 2;
+    const maxDist = Math.sqrt(cx * cx + cy * cy);
     const copy = new Float32Array(pixels);
     for (let y = 0; y < h; y++) {
       for (let x = 0; x < w; x++) {
         const i = idx(x, y);
-        const rxSrc = Math.min(w - 1, Math.max(0, x - offset));
-        pixels[i] = copy[idx(rxSrc, y)];
-        const bxSrc = Math.min(w - 1, Math.max(0, x + offset));
-        pixels[i + 2] = copy[idx(bxSrc, y) + 2];
+        const dx = x - cx, dy = y - cy;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const nd = dist / maxDist;
+        const offset = nd * nd * maxOffset;
+        const dirX = dist > 0 ? dx / dist : 0;
+        const dirY = dist > 0 ? dy / dist : 0;
+        // R: shift outward
+        const rsx = Math.round(Math.min(w - 1, Math.max(0, x - dirX * offset)));
+        const rsy = Math.round(Math.min(h - 1, Math.max(0, y - dirY * offset)));
+        pixels[i] = copy[idx(rsx, rsy)];
+        pixels[i + 1] = copy[i + 1]; // G stays
+        // B: shift inward
+        const bsx = Math.round(Math.min(w - 1, Math.max(0, x + dirX * offset)));
+        const bsy = Math.round(Math.min(h - 1, Math.max(0, y + dirY * offset)));
+        pixels[i + 2] = copy[idx(bsx, bsy) + 2];
       }
     }
   }
 
-  // --- Effect 6: Vignetting (radial darkening) ---
+  // --- 9. Vignetting ---
   if (opts.vignette) {
     const cx = w / 2, cy = h / 2;
     const maxDist = Math.sqrt(cx * cx + cy * cy);
     for (let y = 0; y < h; y++) {
       for (let x = 0; x < w; x++) {
-        const dx = x - cx, dy = y - cy;
-        const dist = Math.sqrt(dx * dx + dy * dy);
+        const dist = Math.sqrt((x - cx) ** 2 + (y - cy) ** 2);
         const factor = 1.0 - 0.35 * Math.pow(dist / maxDist, 2.5);
         const i = idx(x, y);
-        pixels[i] *= factor;
-        pixels[i + 1] *= factor;
-        pixels[i + 2] *= factor;
+        pixels[i] *= factor; pixels[i + 1] *= factor; pixels[i + 2] *= factor;
+      }
+    }
+  }
+
+  // --- 10. Barrel distortion ---
+  if (opts.barrelDistortion > 0) {
+    const k1 = (opts.barrelDistortion / 100) * 0.25;
+    const k2 = k1 * 0.1;
+    const cx = w / 2, cy = h / 2;
+    const maxR = Math.sqrt(cx * cx + cy * cy);
+    const copy = new Float32Array(pixels);
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        const nx = (x - cx) / maxR, ny = (y - cy) / maxR;
+        const r2 = nx * nx + ny * ny;
+        const distort = 1 + k1 * r2 + k2 * r2 * r2;
+        const srcX = cx + (x - cx) * distort;
+        const srcY = cy + (y - cy) * distort;
+        const sx = Math.floor(srcX), sy = Math.floor(srcY);
+        const fx = srcX - sx, fy = srcY - sy;
+        const di = idx(x, y);
+        if (sx >= 0 && sx < w - 1 && sy >= 0 && sy < h - 1) {
+          const i00 = idx(sx, sy), i10 = idx(sx + 1, sy);
+          const i01 = idx(sx, sy + 1), i11 = idx(sx + 1, sy + 1);
+          for (let c = 0; c < 3; c++) {
+            const top = copy[i00 + c] * (1 - fx) + copy[i10 + c] * fx;
+            const bot = copy[i01 + c] * (1 - fx) + copy[i11 + c] * fx;
+            pixels[di + c] = top * (1 - fy) + bot * fy;
+          }
+        } else {
+          pixels[di] = 0; pixels[di + 1] = 0; pixels[di + 2] = 0;
+        }
       }
     }
   }
