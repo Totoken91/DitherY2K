@@ -71,17 +71,13 @@ export default function Preview({
     marginBottom: "3px",
   };
 
-  const baseCanvasStyle = {
+  const canvasStyle = {
+    maxWidth: "100%",
     maxHeight: isMobile ? "50vh" : "450px",
     imageRendering: "pixelated" as const,
     display: "block",
     margin: "0 auto",
   };
-
-  // max-width prevents upscaling beyond natural size for original
-  const canvasStyle = { ...baseCanvasStyle, maxWidth: "100%" };
-  // width:100% + aspect-ratio:auto lets canvas fill panel while keeping ratio
-  const ditheredCanvasStyle = { ...baseCanvasStyle, width: "100%", aspectRatio: "auto" as const };
 
   // Mobile: single panel with toggle tabs — both canvases always rendered
   if (isMobile) {
@@ -144,7 +140,7 @@ export default function Preview({
             <canvas
               ref={resultCanvasRef}
               style={{
-                ...ditheredCanvasStyle,
+                ...canvasStyle,
                 display: mobileTab === "dithered" ? "block" : "none",
                 opacity: isProcessing ? 0.4 : 1,
               }}
@@ -178,7 +174,7 @@ export default function Preview({
           )}
           <canvas
             ref={resultCanvasRef}
-            style={{ ...ditheredCanvasStyle, opacity: isProcessing ? 0.4 : 1, transition: "opacity 0.2s" }}
+            style={{ ...canvasStyle, opacity: isProcessing ? 0.4 : 1, transition: "opacity 0.2s" }}
           />
         </div>
       </div>
