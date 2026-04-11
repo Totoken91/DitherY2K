@@ -71,13 +71,17 @@ export default function Preview({
     marginBottom: "3px",
   };
 
-  const canvasStyle = {
-    maxWidth: "100%",
+  const baseCanvasStyle = {
     maxHeight: isMobile ? "50vh" : "450px",
     imageRendering: "pixelated" as const,
     display: "block",
     margin: "0 auto",
   };
+
+  // Original: max-width so it doesn't stretch beyond natural size
+  const originalStyle = { ...baseCanvasStyle, maxWidth: "100%" };
+  // Dithered: width 100% so low-res always fills the panel
+  const ditheredStyle = { ...baseCanvasStyle, width: "100%" };
 
   // Mobile: single panel with toggle tabs — both canvases always rendered
   if (isMobile) {
@@ -133,14 +137,14 @@ export default function Preview({
             <canvas
               ref={originalCanvasRef}
               style={{
-                ...canvasStyle,
+                ...originalStyle,
                 display: mobileTab === "original" ? "block" : "none",
               }}
             />
             <canvas
               ref={resultCanvasRef}
               style={{
-                ...canvasStyle,
+                ...ditheredStyle,
                 display: mobileTab === "dithered" ? "block" : "none",
                 opacity: isProcessing ? 0.4 : 1,
               }}
@@ -157,7 +161,7 @@ export default function Preview({
       <div className="panel-double-bevel" style={{ flex: 1, minWidth: 0 }}>
         <div className="panel-double-bevel-inner">
           <div style={labelStyle}>{"~ ORIGINAL ~"}</div>
-          <canvas ref={originalCanvasRef} style={canvasStyle} />
+          <canvas ref={originalCanvasRef} style={originalStyle} />
         </div>
       </div>
 
@@ -174,7 +178,7 @@ export default function Preview({
           )}
           <canvas
             ref={resultCanvasRef}
-            style={{ ...canvasStyle, opacity: isProcessing ? 0.4 : 1, transition: "opacity 0.2s" }}
+            style={{ ...ditheredStyle, opacity: isProcessing ? 0.4 : 1, transition: "opacity 0.2s" }}
           />
         </div>
       </div>
