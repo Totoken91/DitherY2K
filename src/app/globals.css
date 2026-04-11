@@ -511,21 +511,40 @@ button:active, .btn-retro:active, .btn-download:active {
 
 /* --- Controls panel --- */
 .controls-panel {
+  max-width: 700px;
+  margin: 4px auto 0;
+  padding: 16px;
   border: 3px ridge #808080;
-  background: rgba(0, 0, 0, 0.6);
-  padding: 8px;
+  background: #000020;
 }
 .controls-title {
   font-family: 'Silkscreen', cursive;
-  font-size: 18px;
+  font-size: 1.1rem;
   text-align: center;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   text-shadow: 2px 2px 0 #000;
+  color: #ff00ff;
 }
 .controls-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 6px;
+  gap: 12px;
+}
+.control-group {
+  border: 2px groove #606060;
+  padding: 12px 10px 8px;
+  background: rgba(0, 0, 40, 0.5);
+  position: relative;
+}
+.control-group-title {
+  font-family: 'Silkscreen', cursive;
+  color: #00ffff;
+  font-size: 0.8rem;
+  margin-top: -22px;
+  margin-bottom: 8px;
+  background: #000020;
+  padding: 0 6px;
+  display: inline-block;
 }
 .control-row {
   margin-bottom: 8px;
@@ -533,9 +552,100 @@ button:active, .btn-retro:active, .btn-download:active {
 .control-label {
   display: block;
   color: #00ff00;
-  font-size: 12px;
-  margin-bottom: 2px;
+  font-family: 'VT323', monospace;
+  font-size: 1.1rem;
+  margin-bottom: 3px;
   text-shadow: 1px 1px 0 #000;
+}
+
+/* --- Retro sliders --- */
+.controls-panel input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  max-width: 220px;
+  height: 20px;
+  background: #000;
+  border: 2px inset #808080;
+  outline: none;
+  cursor: pointer;
+}
+.controls-panel input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 20px;
+  background: #c0c0c0;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #000;
+  border-right: 2px solid #000;
+  cursor: pointer;
+}
+.controls-panel input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 20px;
+  background: #c0c0c0;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #000;
+  border-right: 2px solid #000;
+  cursor: pointer;
+  border-radius: 0;
+}
+
+/* --- Retro checkboxes --- */
+.controls-panel input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border: 2px inset #808080;
+  cursor: pointer;
+  vertical-align: middle;
+}
+.controls-panel input[type="checkbox"]:checked::after {
+  content: '\2713';
+  display: block;
+  text-align: center;
+  font-size: 12px;
+  line-height: 14px;
+  color: #000;
+  font-weight: bold;
+}
+
+/* --- Download button --- */
+.btn-download {
+  display: block;
+  margin: 16px auto 8px;
+  padding: 12px 40px;
+  width: auto;
+  max-width: 400px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.85rem;
+  background: #c0c0c0;
+  border-top: 3px solid #fff;
+  border-left: 3px solid #fff;
+  border-bottom: 3px solid #000;
+  border-right: 3px solid #000;
+  color: #000;
+  cursor: pointer;
+  text-align: center;
+  letter-spacing: 1px;
+}
+.btn-download:hover {
+  background: #d0d0d0;
+}
+.btn-download:active {
+  border-top: 3px solid #000;
+  border-left: 3px solid #000;
+  border-bottom: 3px solid #fff;
+  border-right: 3px solid #fff;
+}
+.btn-download:disabled {
+  color: #808080;
+  cursor: not-allowed;
 }
 
 /* --- Placeholder text --- */
@@ -878,9 +988,20 @@ button:active, .btn-retro:active, .btn-download:active {
     padding: 8px 4px;
   }
 
-  /* Controls: single column */
+  /* Controls: single column, full width */
+  .controls-panel {
+    max-width: 100%;
+    padding: 10px;
+  }
   .controls-grid {
     grid-template-columns: 1fr !important;
+  }
+  .controls-panel input[type="range"] {
+    max-width: 100%;
+  }
+  .btn-download {
+    width: 100%;
+    max-width: none;
   }
 
   /* Preview: stack vertically */
