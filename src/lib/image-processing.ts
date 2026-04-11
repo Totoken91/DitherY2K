@@ -4,9 +4,7 @@
 
 import {
   type DitherOptions,
-  type DigicamOptions,
   applyDithering,
-  applyDigicam,
   adjustBrightnessContrast,
 } from "./dithering";
 
@@ -19,25 +17,6 @@ export const RESOLUTION_PRESETS: Record<
   gameboy: { w: 160, h: 120, label: '160×120 "GameBoy"' },
   snes: { w: 320, h: 240, label: '320×240 "SNES"' },
   vga: { w: 640, h: 480, label: '640×480 "VGA"' },
-  original: { w: 0, h: 0, label: "Original" },
-};
-
-// ----- Digicam-specific resolutions -----
-
-export type DigicamResolutionPreset =
-  | "flip" | "webcam" | "nokia" | "dsi"
-  | "digicam1" | "digicam2" | "original";
-
-export const DIGICAM_RESOLUTION_PRESETS: Record<
-  DigicamResolutionPreset,
-  { w: number; h: number; label: string }
-> = {
-  flip: { w: 352, h: 288, label: '352×288 "Flip Phone"' },
-  webcam: { w: 320, h: 240, label: '320×240 "Webcam"' },
-  nokia: { w: 640, h: 480, label: '640×480 "Nokia 7650"' },
-  dsi: { w: 640, h: 480, label: '640×480 "Nintendo DSi"' },
-  digicam1: { w: 1024, h: 768, label: '1024×768 "Digicam 1MP"' },
-  digicam2: { w: 1600, h: 1200, label: '1600×1200 "Digicam 2MP"' },
   original: { w: 0, h: 0, label: "Original" },
 };
 
@@ -59,7 +38,7 @@ export function loadImageFromFile(file: File): Promise<HTMLImageElement> {
   });
 }
 
-// ----- Resize to target resolution (maintains aspect ratio, fits inside) -----
+// ----- Resize -----
 
 function resizeImage(
   source: HTMLImageElement,
@@ -77,19 +56,14 @@ function resizeImage(
     return canvas;
   }
 
-  // Use the longest side of the preset as the max dimension.
-  // The cropped image keeps its own aspect ratio.
   const maxSide = Math.max(targetW, targetH);
-  const srcW = crop.sw;
-  const srcH = crop.sh;
-
   let w: number, h: number;
-  if (srcW >= srcH) {
+  if (crop.sw >= crop.sh) {
     w = maxSide;
-    h = Math.round(maxSide * (srcH / srcW));
+    h = Math.round(maxSide * (crop.sh / crop.sw));
   } else {
     h = maxSide;
-    w = Math.round(maxSide * (srcW / srcH));
+    w = Math.round(maxSide * (crop.sw / crop.sh));
   }
 
   canvas.width = w;
@@ -105,7 +79,6 @@ function upscaleNearestNeighbor(
   factor: number
 ): HTMLCanvasElement {
   if (factor <= 1) return source;
-
   const canvas = document.createElement("canvas");
   canvas.width = source.width * factor;
   canvas.height = source.height * factor;
@@ -115,7 +88,7 @@ function upscaleNearestNeighbor(
   return canvas;
 }
 
-// ----- Crop (center crop to aspect ratio) -----
+// ----- Crop -----
 
 export type CropRatio = "free" | "1:1" | "3:4" | "4:3";
 
@@ -125,7 +98,6 @@ function cropToRatio(
 ): { sx: number; sy: number; sw: number; sh: number } {
   const srcW = source.naturalWidth;
   const srcH = source.naturalHeight;
-
   if (ratio === "free") return { sx: 0, sy: 0, sw: srcW, sh: srcH };
 
   let targetRatio: number;
@@ -138,83 +110,43 @@ function cropToRatio(
 
   const srcRatio = srcW / srcH;
   let sw: number, sh: number;
-
   if (srcRatio > targetRatio) {
-    // Source is wider — crop sides
-    sh = srcH;
-    sw = Math.round(srcH * targetRatio);
+    sh = srcH; sw = Math.round(srcH * targetRatio);
   } else {
-    // Source is taller — crop top/bottom
-    sw = srcW;
-    sh = Math.round(srcW / targetRatio);
+    sw = srcW; sh = Math.round(srcW / targetRatio);
   }
-
-  const sx = Math.round((srcW - sw) / 2);
-  const sy = Math.round((srcH - sh) / 2);
-  return { sx, sy, sw, sh };
+  return { sx: Math.round((srcW - sw) / 2), sy: Math.round((srcH - sh) / 2), sw, sh };
 }
 
 // ----- Processing options -----
 
-export type ProcessingMode = "dither" | "digicam";
-
 export interface ProcessingOptions {
-  mode: ProcessingMode;
   resolution: ResolutionPreset;
-  digicamResolution: DigicamResolutionPreset;
   cropRatio: CropRatio;
   upscaleFactor: number;
   brightness: number;
   contrast: number;
   dither: DitherOptions;
-  digicam: DigicamOptions;
 }
 
 /**
- * Full pipeline: resize → brightness/contrast → (dither OR digicam) → [date stamp] → upscale.
+ * Pipeline: crop → resize → brightness/contrast → dither → upscale.
  */
 export function processImage(
   source: HTMLImageElement,
   options: ProcessingOptions
 ): { dithered: HTMLCanvasElement; final: HTMLCanvasElement } {
-  const preset = options.mode === "digicam"
-    ? DIGICAM_RESOLUTION_PRESETS[options.digicamResolution]
-    : RESOLUTION_PRESETS[options.resolution];
-
-  // Step 0: Crop
+  const preset = RESOLUTION_PRESETS[options.resolution];
   const crop = cropToRatio(source, options.cropRatio);
-
-  // Step 1: Resize
   const resized = resizeImage(source, preset.w, preset.h, crop);
   const ctx = resized.getContext("2d")!;
   const imageData = ctx.getImageData(0, 0, resized.width, resized.height);
 
-  // Step 2: Brightness / Contrast
   adjustBrightnessContrast(imageData.data, options.brightness, options.contrast);
-
-  // Step 3: Apply effect based on mode
-  if (options.mode === "digicam") {
-    applyDigicam(imageData, options.digicam);
-  } else {
-    applyDithering(imageData, options.dither);
-  }
-
-  // Write back
+  applyDithering(imageData, options.dither);
   ctx.putImageData(imageData, 0, 0);
 
-  // Step 3.5: Date stamp (digicam only, before upscale for pixelated look)
-  if (options.mode === "digicam" && options.digicam.dateStamp) {
-    const fontSize = Math.max(8, Math.floor(resized.height * 0.04));
-    ctx.font = `bold ${fontSize}px "Courier New", monospace`;
-    ctx.fillStyle = "rgba(255, 136, 0, 0.75)";
-    ctx.textAlign = "right";
-    ctx.textBaseline = "bottom";
-    ctx.fillText("2003/04/07", resized.width - 4, resized.height - 3);
-  }
-
-  // Step 4: Upscale
   const final = upscaleNearestNeighbor(resized, options.upscaleFactor);
-
   return { dithered: resized, final };
 }
 
@@ -222,10 +154,10 @@ export function processImage(
 
 export function downloadPNG(
   canvas: HTMLCanvasElement,
-  mode: string,
-  detail: string
+  algorithm: string,
+  colorCount: number
 ): void {
-  const filename = `dithery2k_${mode}_${detail}.png`;
+  const filename = `dithery2k_${algorithm}_${colorCount}c.png`;
   const link = document.createElement("a");
   link.download = filename;
   link.href = canvas.toDataURL("image/png");

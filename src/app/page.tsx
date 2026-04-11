@@ -19,32 +19,16 @@ import {
 } from "@/lib/image-processing";
 
 const DEFAULT_CONTROLS: ControlValues = {
-  mode: "dither",
-  // Shared
   resolution: "vga",
-  digicamResolution: "nokia",
   cropRatio: "free",
   upscaleEnabled: false,
   upscaleFactor: 2,
   brightness: 0,
   contrast: 0,
-  // Dither
   algorithm: "floyd-steinberg",
   colorCount: 16,
   paletteMode: "auto",
   threshold: 128,
-  // Digicam
-  digicamNoise: 55,
-  digicamJpegQuality: 30,
-  digicamBloom: 0,
-  digicamColorCast: "warm",
-  digicamVignette: true,
-  digicamChromatic: true,
-  digicamDateStamp: false,
-  digicamBarrelDistortion: 40,
-  digicamBlur: 45,
-  digicamSaturationBoost: 15,
-  digicamDynamicRangeCompress: true,
 };
 
 const BADGES = [
@@ -93,9 +77,7 @@ export default function Home() {
         setTimeout(() => {
           try {
             const result = processImage(img, {
-              mode: ctrl.mode,
               resolution: ctrl.resolution,
-              digicamResolution: ctrl.digicamResolution,
               cropRatio: ctrl.cropRatio,
               upscaleFactor: ctrl.upscaleEnabled ? ctrl.upscaleFactor : 1,
               brightness: ctrl.brightness,
@@ -107,19 +89,6 @@ export default function Home() {
                 threshold: ctrl.threshold,
                 brightness: ctrl.brightness,
                 contrast: ctrl.contrast,
-              },
-              digicam: {
-                noise: ctrl.digicamNoise,
-                jpegQuality: ctrl.digicamJpegQuality,
-                bloom: ctrl.digicamBloom,
-                colorCast: ctrl.digicamColorCast,
-                vignette: ctrl.digicamVignette,
-                chromatic: ctrl.digicamChromatic,
-                dateStamp: ctrl.digicamDateStamp,
-                barrelDistortion: ctrl.digicamBarrelDistortion,
-                blur: ctrl.digicamBlur,
-                saturationBoost: ctrl.digicamSaturationBoost,
-                dynamicRangeCompress: ctrl.digicamDynamicRangeCompress,
               },
             });
             finalCanvasRef.current = result.final;
@@ -159,12 +128,9 @@ export default function Home() {
 
   const handleDownload = useCallback(() => {
     if (finalCanvasRef.current) {
-      const detail = controls.mode === "dither"
-        ? `${controls.algorithm}_${controls.colorCount}c`
-        : "digicam";
-      downloadPNG(finalCanvasRef.current, controls.mode, detail);
+      downloadPNG(finalCanvasRef.current, controls.algorithm, controls.colorCount);
     }
-  }, [controls.mode, controls.algorithm, controls.colorCount]);
+  }, [controls.algorithm, controls.colorCount]);
 
   return (
     <div id="top">
