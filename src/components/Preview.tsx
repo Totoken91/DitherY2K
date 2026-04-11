@@ -39,13 +39,15 @@ export default function Preview({
   }, [originalImage]);
 
   useEffect(() => {
-    if (!resultCanvas || !resultCanvasRef.current) return;
+    if (!resultCanvas || !resultCanvasRef.current || !originalImage) return;
     const canvas = resultCanvasRef.current;
-    canvas.width = resultCanvas.width;
-    canvas.height = resultCanvas.height;
+    // Always display at original image dimensions — upscale the dithered result
+    canvas.width = originalImage.naturalWidth;
+    canvas.height = originalImage.naturalHeight;
     const ctx = canvas.getContext("2d")!;
-    ctx.drawImage(resultCanvas, 0, 0);
-  }, [resultCanvas]);
+    ctx.imageSmoothingEnabled = false; // nearest-neighbor for crisp pixels
+    ctx.drawImage(resultCanvas, 0, 0, canvas.width, canvas.height);
+  }, [resultCanvas, originalImage]);
 
   if (!originalImage) {
     return (
