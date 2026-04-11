@@ -69,6 +69,7 @@ export default function Home() {
   }, []);
   const finalCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const prevImageRef = useRef<HTMLImageElement | null>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
 
   const runProcessing = useCallback(
     (img: HTMLImageElement, ctrl: ControlValues) => {
@@ -121,6 +122,10 @@ export default function Home() {
     try {
       const img = await loadImageFromFile(file);
       setImage(img);
+      // Scroll to preview after a short delay (let React render first)
+      setTimeout(() => {
+        previewRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 300);
     } catch {
       alert("Failed to load image. Please try a different file.");
     }
@@ -300,7 +305,7 @@ export default function Home() {
 
             {/* Preview */}
             {image && (
-              <div className="groove-box main-preview" style={{ padding: "4px" }}>
+              <div ref={previewRef} className="groove-box main-preview" style={{ padding: "4px" }}>
                 <Preview
                   originalImage={image}
                   resultCanvas={resultCanvas}

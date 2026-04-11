@@ -79,7 +79,7 @@ export default function Preview({
     margin: "0 auto",
   };
 
-  // Mobile: single image with toggle tabs
+  // Mobile: single panel with toggle tabs — both canvases always rendered
   if (isMobile) {
     return (
       <div>
@@ -129,17 +129,21 @@ export default function Preview({
                 <div className="retro-spinner" />
               </div>
             )}
+            {/* Both canvases always rendered, toggle visibility */}
             <canvas
-              ref={mobileTab === "original" ? originalCanvasRef : resultCanvasRef}
+              ref={originalCanvasRef}
               style={{
                 ...canvasStyle,
-                opacity: isProcessing && mobileTab === "dithered" ? 0.4 : 1,
+                display: mobileTab === "original" ? "block" : "none",
               }}
             />
-            {/* Hidden canvas to keep both refs alive */}
             <canvas
-              ref={mobileTab === "original" ? resultCanvasRef : originalCanvasRef}
-              style={{ display: "none" }}
+              ref={resultCanvasRef}
+              style={{
+                ...canvasStyle,
+                display: mobileTab === "dithered" ? "block" : "none",
+                opacity: isProcessing ? 0.4 : 1,
+              }}
             />
           </div>
         </div>
