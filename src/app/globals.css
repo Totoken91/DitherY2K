@@ -648,6 +648,61 @@ button:active, .btn-retro:active, .btn-download:active {
   cursor: not-allowed;
 }
 
+/* --- Palette swatches --- */
+.palette-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-top: 6px;
+  align-items: center;
+}
+.palette-swatch {
+  width: 18px;
+  height: 18px;
+  border-top: 1px solid #fff;
+  border-left: 1px solid #fff;
+  border-bottom: 1px solid #000;
+  border-right: 1px solid #000;
+}
+.palette-swatch-editable {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #000;
+  border-right: 2px solid #000;
+  position: relative;
+}
+.palette-swatch-editable:hover {
+  border-top-color: #000;
+  border-left-color: #000;
+  border-bottom-color: #fff;
+  border-right-color: #fff;
+}
+.palette-add-btn {
+  width: 24px;
+  height: 24px;
+  font-family: 'VT323', monospace;
+  font-size: 1.2rem;
+  line-height: 20px;
+  text-align: center;
+  background: #c0c0c0;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #000;
+  border-right: 2px solid #000;
+  cursor: pointer;
+  color: #000;
+  padding: 0;
+}
+.palette-add-btn:active {
+  border-top-color: #000;
+  border-left-color: #000;
+  border-bottom-color: #fff;
+  border-right-color: #fff;
+}
+
 /* --- Placeholder text --- */
 .placeholder-text {
   color: #808080;

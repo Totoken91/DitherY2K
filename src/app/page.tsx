@@ -28,6 +28,7 @@ const DEFAULT_CONTROLS: ControlValues = {
   algorithm: "floyd-steinberg",
   colorCount: 16,
   paletteMode: "auto",
+  customPalette: ["#000000", "#ffffff", "#ff0000", "#0000ff"],
   threshold: 128,
 };
 
@@ -87,6 +88,7 @@ export default function Home() {
                 algorithm: ctrl.algorithm,
                 colorCount: ctrl.colorCount,
                 paletteMode: ctrl.paletteMode,
+                customPalette: ctrl.customPalette,
                 threshold: ctrl.threshold,
                 brightness: ctrl.brightness,
                 contrast: ctrl.contrast,

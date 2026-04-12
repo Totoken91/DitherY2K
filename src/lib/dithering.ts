@@ -8,33 +8,94 @@ export type DitherAlgorithm =
   | "ordered"
   | "threshold";
 
-export type PaletteMode = "auto" | "gameboy" | "cga" | "ega" | "grayscale";
+export type PaletteMode =
+  | "auto" | "custom"
+  // Retro Systems
+  | "gameboy" | "cga1" | "cga2" | "ega" | "c64" | "nes" | "pico8"
+  // Monochrome
+  | "bw" | "grayscale" | "amber" | "green-phosphor" | "blue-terminal"
+  // Artistic
+  | "crimson" | "vaporwave" | "cybernight" | "sepia";
 
 export interface DitherOptions {
   algorithm: DitherAlgorithm;
-  colorCount: number; // 2–64
+  colorCount: number;
   paletteMode: PaletteMode;
-  threshold: number; // 0–255, used by threshold algo
-  brightness: number; // -100 to 100
-  contrast: number; // -100 to 100
+  customPalette?: string[];
+  threshold: number;
+  brightness: number;
+  contrast: number;
 }
 
 // ----- Preset palettes -----
 
-const PALETTE_GAMEBOY: RGB[] = [
-  [15, 56, 15], [48, 98, 48], [139, 172, 15], [155, 188, 15],
-];
+function hexToRgb(hex: string): RGB {
+  const v = parseInt(hex.slice(1), 16);
+  return [(v >> 16) & 0xff, (v >> 8) & 0xff, v & 0xff];
+}
 
-const PALETTE_CGA: RGB[] = [
-  [0, 0, 0], [85, 255, 255], [255, 85, 255], [255, 255, 255],
-];
-
-const PALETTE_EGA: RGB[] = [
-  [0,0,0], [0,0,170], [0,170,0], [0,170,170],
-  [170,0,0], [170,0,170], [170,85,0], [170,170,170],
-  [85,85,85], [85,85,255], [85,255,85], [85,255,255],
-  [255,85,85], [255,85,255], [255,255,85], [255,255,255],
-];
+const PALETTES: Record<string, RGB[]> = {
+  // Retro Systems
+  gameboy: [[15,56,15],[48,98,48],[139,172,15],[155,188,15]],
+  cga1: [[0,0,0],[85,255,255],[255,85,255],[255,255,255]],
+  cga2: [[0,0,0],[85,255,85],[255,85,85],[255,255,85]],
+  ega: [
+    [0,0,0],[0,0,170],[0,170,0],[0,170,170],
+    [170,0,0],[170,0,170],[170,85,0],[170,170,170],
+    [85,85,85],[85,85,255],[85,255,85],[85,255,255],
+    [255,85,85],[255,85,255],[255,255,85],[255,255,255],
+  ],
+  c64: [
+    [0,0,0],[255,255,255],[136,0,0],[170,255,238],
+    [204,68,204],[0,204,85],[0,0,170],[238,238,119],
+    [221,136,85],[102,68,0],[255,119,119],[51,51,51],
+    [119,119,119],[170,255,102],[0,136,255],[187,187,187],
+  ],
+  nes: [
+    [0,0,0],[252,252,252],[248,248,248],[188,188,188],
+    [124,124,124],[164,228,252],[60,188,252],[0,120,248],
+    [0,0,252],[184,184,248],[104,136,252],[0,88,248],
+    [0,0,188],[216,184,248],[152,120,248],[104,68,252],
+    [68,40,188],[248,184,248],[248,120,248],[216,0,204],
+    [148,0,132],[248,164,192],[248,88,152],[228,0,88],
+    [168,0,32],[240,208,176],[248,120,88],[248,56,0],
+    [168,16,0],[252,224,168],[252,160,68],[228,92,16],
+    [136,20,0],[248,216,120],[248,184,0],[172,124,0],
+    [80,48,0],[216,248,120],[184,248,24],[0,184,0],
+    [0,120,0],[184,248,184],[88,216,84],[0,168,0],
+    [0,104,0],[184,248,216],[88,248,152],[0,168,68],
+    [0,88,0],[0,252,252],[0,232,216],[0,136,136],
+    [0,64,88],[248,216,248],[120,120,120],
+  ],
+  pico8: [
+    [0,0,0],[29,43,83],[126,37,83],[0,135,81],
+    [171,82,54],[95,87,79],[194,195,199],[255,241,232],
+    [255,0,77],[255,163,0],[255,236,39],[0,228,54],
+    [41,173,255],[131,118,156],[255,119,168],[255,204,170],
+  ],
+  // Monochrome
+  bw: [[0,0,0],[255,255,255]],
+  amber: [[0,0,0],[61,31,0],[122,63,0],[255,136,0]],
+  "green-phosphor": [[0,0,0],[0,51,0],[0,170,0],[0,255,0]],
+  "blue-terminal": [[0,0,0],[0,0,68],[0,68,170],[68,170,255]],
+  // Artistic
+  crimson: [
+    [10,0,8],[26,0,21],[61,10,42],[107,16,64],
+    [160,32,80],[204,51,102],[224,96,136],[240,160,176],
+  ],
+  vaporwave: [
+    [13,2,33],[21,0,80],[53,0,211],[131,56,236],
+    [255,41,117],[255,107,107],[248,181,0],[0,245,212],
+  ],
+  cybernight: [
+    [10,10,10],[13,17,23],[26,26,46],[22,33,62],
+    [15,52,96],[233,69,96],[83,52,131],[0,255,245],
+  ],
+  sepia: [
+    [26,16,8],[61,43,31],[107,76,48],[166,124,82],
+    [212,167,106],[240,222,180],
+  ],
+};
 
 function generateGrayscale(count: number): RGB[] {
   const palette: RGB[] = [];
@@ -45,16 +106,25 @@ function generateGrayscale(count: number): RGB[] {
   return palette;
 }
 
-function getPresetPalette(mode: PaletteMode, colorCount: number, imageData?: ImageData): RGB[] {
-  switch (mode) {
-    case "gameboy": return PALETTE_GAMEBOY;
-    case "cga": return PALETTE_CGA;
-    case "ega": return PALETTE_EGA;
-    case "grayscale": return generateGrayscale(Math.max(2, Math.min(colorCount, 64)));
-    case "auto":
-    default:
-      return generatePalette(colorCount, imageData);
-  }
+export function getPresetPalette(
+  mode: PaletteMode,
+  colorCount: number,
+  imageData?: ImageData,
+  customPalette?: string[]
+): RGB[] {
+  if (mode === "auto") return generatePalette(colorCount, imageData);
+  if (mode === "grayscale") return generateGrayscale(Math.max(2, Math.min(colorCount, 64)));
+  if (mode === "custom" && customPalette) return customPalette.map(hexToRgb);
+  const preset = PALETTES[mode];
+  if (preset) return preset;
+  return generatePalette(colorCount, imageData);
+}
+
+/** Get the hex colors of a preset for UI preview */
+export function getPresetColors(mode: PaletteMode): string[] | null {
+  const preset = PALETTES[mode];
+  if (!preset) return null;
+  return preset.map(([r, g, b]) => `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`);
 }
 
 export const DEFAULT_OPTIONS: DitherOptions = {
@@ -457,7 +527,7 @@ export function applyDithering(
   options: DitherOptions
 ): void {
   const { width, height, data } = imageData;
-  const palette = getPresetPalette(options.paletteMode, options.colorCount, imageData);
+  const palette = getPresetPalette(options.paletteMode, options.colorCount, imageData, options.customPalette);
 
   // Copy pixel data to float array for error diffusion precision
   const pixels = new Float32Array(width * height * 3);
